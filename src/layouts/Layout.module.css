@@ -9,7 +9,6 @@
   min-height: 100vh;
   min-height: 100dvh;
   margin: 0 auto;
-  margin-bottom: 61px; /* 하단 네비게이션 영역 확보 */
   overflow: hidden;
 }
 
