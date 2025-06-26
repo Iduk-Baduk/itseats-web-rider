@@ -16,6 +16,7 @@ export default function Main() {
       <Link to="/mypage">마이페이지</Link>
       <Link to="/delivery">배달(콜) 페이지</Link>
       <Link to="/login">로그인으로 돌아가기</Link>
+      <Link to="/temp">공용 컴포넌트 갤러리</Link>
     </div>
   );
 }

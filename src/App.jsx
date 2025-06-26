@@ -9,6 +9,7 @@ import Delivery from "./pages/delivery/Delivery";
 import MyPage from "./pages/mypage/MyPage";
 import Settlement from "./pages/mypage/Settlement";
 import Summary from "./pages/mypage/Summary";
+import Temp from "./pages/temp/Temp";
 
 export default function App() {
 
@@ -24,6 +25,7 @@ export default function App() {
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/settlement" element={<Settlement />} />
           <Route path="/summary" element={<Summary />} />
+          <Route path="/temp" element={<Temp />} />
         </Route>
       </Routes>
     </BrowserRouter>

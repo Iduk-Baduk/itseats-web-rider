@@ -1,5 +1,7 @@
 :root {
     /* Global */
+    --theme-color: #178351;
+    --focus-color: #167d4e;
 
     --background-hover-color: rgba(0, 0, 0, 0.043) /* #F4F4F4 */;
 
