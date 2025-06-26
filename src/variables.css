@@ -1,5 +1,8 @@
 :root {
     /* Global */
+
+    --background-hover-color: rgba(0, 0, 0, 0.043) /* #F4F4F4 */;
+
     --border-color-light: #EEE;
     --border-color: #B2B2B2;
 }
