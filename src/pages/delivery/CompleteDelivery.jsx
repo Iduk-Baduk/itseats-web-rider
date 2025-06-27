@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-export default function Delivery() {
+export default function CompleteDelivery() {
   return (
     <div
       style={{
@@ -12,8 +12,8 @@ export default function Delivery() {
         gap: "20px",
       }}
     >
-      <h1>배달 페이지 (콜, 수락, 픽업, 배달 중, 사진 촬영)</h1>
-      <Link to="/main">메인 페이지</Link>
+      <h1>배달 완료 사진 업로드 페이지</h1>
+      <Link to="/delivery">메인 페이지로 돌아가기</Link>
     </div>
   );
 }

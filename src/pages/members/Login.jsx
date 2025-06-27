@@ -27,7 +27,7 @@ export default function Login() {
         <h1>로그인 페이지</h1>
         <Link to="/">랜딩 페이지</Link>
         <Link to="/register">회원가입</Link>
-        <Link to="/main">메인페이지 이동</Link>
+        <Link to="/delivery">메인페이지 이동</Link>
       </div>
     </>
   );
