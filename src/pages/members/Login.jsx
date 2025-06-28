@@ -1,9 +1,15 @@
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Header from "../../components/common/Header";
+import Button from "../../components/basic/Button";
+import TextInput from "../../components/basic/TextInput";
 import styles from "./Login.module.css";
 
 export default function Login() {
   const navigate = useNavigate();
+
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
   return (
     <>
@@ -12,22 +18,30 @@ export default function Login() {
         rightIcon=""
         leftButtonAction={() => navigate(-1)}
         title="로그인"
+        className={styles.header}
       />
-      <div
-        className={styles.container}
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
-          flexDirection: "column",
-          gap: "20px",
-        }}
-      >
-        <h1>로그인 페이지</h1>
-        <Link to="/">랜딩 페이지</Link>
-        <Link to="/register">회원가입</Link>
-        <Link to="/delivery">메인페이지 이동</Link>
+      <div className={styles.container}>
+        <TextInput
+          type="text"
+          placeholder="아이디"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          className={styles.textInput}
+        />
+        <TextInput
+          type="password"
+          placeholder="비밀번호"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className={styles.textInput}
+        />
+        <Button
+          onClick={() => navigate("/delivery")}
+          disabled={false}
+          className={styles.button}
+        >
+          로그인
+        </Button>
       </div>
     </>
   );

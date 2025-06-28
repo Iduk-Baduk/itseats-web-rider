@@ -8,10 +8,11 @@ export default function Header({
   title = "ItsEats",
   color = "#000",
   backgroundColor = "#fff",
+  className
 }) {
   return (
     <header
-      className={styles.header}
+      className={`${styles.header} ${className}`}
       style={{ backgroundColor, color }}
     >
       {leftIcon && (

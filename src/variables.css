@@ -3,6 +3,9 @@
     --theme-color: #178351;
     --focus-color: #167d4e;
 
+    --disabled-color: #F1F4F6;
+    --disabled-text-color: #AAB5C0;
+
     --background-hover-color: rgba(0, 0, 0, 0.043) /* #F4F4F4 */;
 
     --border-color-light: #EEE;
