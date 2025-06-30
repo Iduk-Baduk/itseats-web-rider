@@ -57,7 +57,7 @@
   transition: .4s;
 }
 .switch input:checked + .slider {
-  background-color: #178351;
+  background-color: #083822;
 }
 .slider:before {
   position: absolute;

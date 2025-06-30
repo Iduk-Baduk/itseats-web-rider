@@ -13,6 +13,7 @@ import Summary from "./pages/mypage/Summary";
 import Temp from "./pages/temp/Temp";
 import CallIncoming from "./pages/delivery/CallInComing";
 import MainOffline from './pages/main/MainOffline';
+import MainOnline from "./pages/main/MainOnline";
 
 export default function App() {
 
@@ -32,6 +33,7 @@ export default function App() {
           <Route path="/summary" element={<Summary />} />
           <Route path="/temp" element={<Temp />} />
           <Route path="/delivery/call-incoming" element={<CallIncoming />} />
+          <Route path="/main/online" element={<MainOnline />} />
         </Route>
       </Routes>
     </BrowserRouter>
