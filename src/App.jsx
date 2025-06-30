@@ -7,7 +7,6 @@ import Login from "./pages/members/Login";
 import Register from "./pages/members/Register";
 import Map from "./pages/delivery/Map";
 import DeliveryStatus from "./pages/delivery/DeliveryStatus";
-import CompleteDelivery from "./pages/delivery/CompleteDelivery";
 import MyPage from "./pages/mypage/MyPage";
 import Settlement from "./pages/mypage/Settlement";
 import Summary from "./pages/mypage/Summary";
@@ -18,6 +17,8 @@ import MainOnline from "./pages/main/MainOnline";
 import GoToStore from "./pages/delivery/GoToStore";
 import Pickup from "./pages/delivery/Pickup";
 import DeliveryInProgress from "./pages/delivery/DeliveryInProgress";
+import DeliveryPhotoConfirm from "./pages/delivery/DeliveryPhotoConfirm";
+import DeliveryComplete from "./pages/delivery/DeliveryComplete";
 
 // 온라인/오프라인 상태를 관리하는 컴포넌트
 function MainWrapper() {
@@ -52,7 +53,6 @@ export default function App() {
           <Route path="/delivery" element={<Map />} />
           <Route path="/main/*" element={<MainWrapper />} />
           <Route path="/delivery/:orderId" element={<DeliveryStatus />} />
-          <Route path="/delivery/:orderId/complete" element={<CompleteDelivery />} />
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/settlement" element={<Settlement />} />
           <Route path="/summary" element={<Summary />} />
@@ -61,6 +61,8 @@ export default function App() {
           <Route path="/delivery/go-to-store" element={<GoToStore />} />
           <Route path="/delivery/pickup" element={<Pickup />} />
           <Route path="/delivery/in-progress" element={<DeliveryInProgress />} />
+          <Route path="/delivery/photo-confirm" element={<DeliveryPhotoConfirm />} />
+          <Route path="/delivery/complete" element={<DeliveryComplete />} />
         </Route>
       </Routes>
     </BrowserRouter>
