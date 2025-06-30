@@ -1,0 +1,88 @@
+.wrapper {
+  min-height: 100vh;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.topBar {
+  width: 100vw;
+  max-width: 480px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  background: #fff;
+  box-sizing: border-box;
+}
+
+.backBtn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #222;
+  cursor: pointer;
+}
+
+.photoPreview {
+  margin: 18px 0 0 0;
+  width: 260px;
+  height: 340px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f4f4f4;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.photoImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.infoText {
+  margin-top: 16px;
+  font-size: 15px;
+  color: #333;
+  text-align: center;
+  letter-spacing: 0.02em;
+  line-height: 1.6;
+}
+
+.retakeBtn {
+  margin: 18px 0 0 0;
+  background: none;
+  border: none;
+  color: #666;
+  font-size: 16px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  gap: 7px;
+}
+
+.retakeIcon {
+  font-size: 18px;
+}
+
+.completeBtn {
+  margin: 36px 0 0 0;
+  width: 90vw;
+  max-width: 400px;
+  background: #178351;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 19px;
+  font-weight: bold;
+  padding: 18px 0;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(23,131,81,0.07);
+}
