@@ -1,0 +1,42 @@
+.requestBox {
+  background: #f8f9fa;
+  border-radius: 10px;
+  padding: 14px 16px 10px 16px;
+  margin: 0 20px 14px 20px;
+}
+.titleRow {
+  display: flex;
+  align-items: center;
+  margin-bottom: 4px;
+}
+.icon {
+  font-size: 16px;
+  margin-right: 5px;
+}
+.title {
+  font-size: 14px;
+  font-weight: bold;
+  color: #222;
+}
+.requestText {
+  font-size: 14px;
+  color: #222;
+  margin-bottom: 8px;
+  margin-left: 2px;
+  letter-spacing: 0.04em;
+  line-height: 1.7;
+}
+.buttonRow {
+  display: flex;
+  gap: 8px;
+}
+.subBtn {
+  background: #fff;
+  color: #178351;
+  border: 1px solid #178351;
+  border-radius: 7px;
+  padding: 7px 10px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
