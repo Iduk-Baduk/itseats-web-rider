@@ -48,10 +48,11 @@
   background: #178351;
   color: #fff;
   font-size: 13px;
+  width: 4.2em;
+  height: 1em;
   font-weight: 700;
   border-radius: 8px;
   padding: 2px 12px;
-  margin-left: 10px;
   letter-spacing: 0.04em;
 }
 
