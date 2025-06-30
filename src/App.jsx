@@ -16,6 +16,7 @@ import CallIncoming from "./pages/delivery/CallInComing";
 import MainOffline from './pages/main/MainOffline';
 import MainOnline from "./pages/main/MainOnline";
 import GoToStore from "./pages/delivery/GoToStore";
+import Pickup from "./pages/delivery/Pickup";
 
 // 온라인/오프라인 상태를 관리하는 컴포넌트
 function MainWrapper() {
@@ -57,6 +58,7 @@ export default function App() {
           <Route path="/temp" element={<Temp />} />
           <Route path="/delivery/call-incoming" element={<CallIncoming />} />
           <Route path="/delivery/go-to-store" element={<GoToStore />} />
+          <Route path="/delivery/pickup" element={<Pickup />} />
         </Route>
       </Routes>
     </BrowserRouter>

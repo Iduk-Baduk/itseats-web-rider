@@ -1,0 +1,103 @@
+.section {
+  padding: 0 20px;
+  margin-bottom: 18px;
+  letter-spacing: 0.05em;   /* 자간 넓힘 */
+  line-height: 1.8;         /* 행간 넓힘 */
+}
+
+.serviceRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+  letter-spacing: 0.05em;
+  line-height: 1.8;
+}
+
+.serviceTitle {
+  font-size: 16px;
+  color: #178351;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  line-height: 1.8;
+}
+
+.type {
+  color: #178351;
+  font-weight: 600;
+  font-size: 15px;
+  margin-left: 2px;
+  letter-spacing: 0.05em;
+  line-height: 1.8;
+}
+
+.badge {
+  background: #e6f3eb;
+  color: #178351;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 8px;
+  padding: 2px 8px;
+  margin-left: 8px;
+  letter-spacing: 0.05em;
+  line-height: 1.8;
+}
+
+.address {
+  font-size: 15px;
+  color: #222;
+  margin-bottom: 4px;
+  word-break: keep-all;
+  letter-spacing: 0.05em;
+  line-height: 1.8;
+}
+
+.storeName {
+  font-size: 20px;
+  font-weight: bold;
+  color: #222;
+  margin-bottom: 8px;
+  letter-spacing: 0.05em;
+  line-height: 1.8;
+}
+
+.menuRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 15px;
+  margin-bottom: 2px;
+  letter-spacing: 0.05em;
+  line-height: 1.8;
+}
+
+.menuLabel {
+  color: #888;
+  letter-spacing: 0.05em;
+  line-height: 1.8;
+}
+
+.menuPrice {
+  font-weight: bold;
+  color: #222;
+  letter-spacing: 0.05em;
+  line-height: 1.8;
+}
+
+.detail {
+  font-size: 13px;
+  color: #888;
+  margin-bottom: 4px;
+  letter-spacing: 0.05em;
+  line-height: 1.8;
+}
+
+.request {
+  font-size: 14px;
+  color: #222;
+  margin-top: 10px;
+  margin-bottom: 4px;
+  word-break: keep-all;
+  letter-spacing: 0.05em;
+  line-height: 1.8;
+}
