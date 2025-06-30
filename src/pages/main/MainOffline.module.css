@@ -1,0 +1,203 @@
+.wrapper {
+  background: #f7faf9;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* 상단 상태바 */
+.topBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #222;
+  color: #fff;
+  padding: 10px 14px 10px 10px;
+  position: relative;
+}
+.profileBtn {
+  background: none;
+  border: none;
+  padding: 0;
+  margin-right: 4px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  width: 36px;
+  height: 36px;
+}
+.profileImg {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.statusText {
+  flex: 1;
+  text-align: center;
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+}
+.toggleArea {
+  margin-left: 4px;
+  width: 48px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+}
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: #444;
+  border-radius: 24px;
+  transition: .4s;
+}
+.switch input:checked + .slider {
+  background-color: #178351;
+}
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: #fff;
+  border-radius: 50%;
+  transition: .4s;
+}
+.switch input:checked + .slider:before {
+  transform: translateX(20px);
+}
+
+/* 지도 영역 */
+.mapArea {
+  position: relative;
+  width: 100%;
+  height: 340px;
+  background: #eaeaea;
+  overflow: hidden;
+}
+.mapImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.areaInfo {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  padding: 8px 14px;
+  font-size: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+.areaPrice {
+  color: #178351;
+  font-weight: bold;
+  font-size: 13px;
+}
+
+/* 하단 시트 */
+.bottomSheet {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  background: #fff;
+  border-radius: 18px 18px 0 0;
+  box-shadow: 0 -2px 16px rgba(0,0,0,0.06);
+  padding: 0 0 18px 0;
+}
+.tabBar {
+  display: flex;
+  margin-top: 10px;
+  border-bottom: 1.5px solid #eee;
+}
+.tab, .active {
+  flex: 1;
+  padding: 16px 0 12px 0;
+  font-size: 16px;
+  border: none;
+  background: none;
+  color: #aaa;
+  font-weight: 500;
+  cursor: pointer;
+}
+.active {
+  color: #222;
+  border-bottom: 2.5px solid #222;
+  background: #fff;
+}
+.missionSection {
+  padding: 18px 18px 0 18px;
+}
+.missionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  font-size: 15px;
+  color: #888;
+}
+.missionSub {
+  color: #178351;
+  font-size: 13px;
+  font-weight: 500;
+}
+.missionCard {
+  display: flex;
+  align-items: center;
+  background: #f7faf9;
+  border-radius: 12px;
+  padding: 14px 18px;
+  margin-top: 2px;
+}
+.missionBadge {
+  width: 48px;
+  height: 48px;
+  background: #178351;
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 19px;
+  font-weight: bold;
+  margin-right: 16px;
+  line-height: 1.2;
+}
+.badgeSub {
+  font-size: 12px;
+  font-weight: 400;
+  opacity: 0.9;
+}
+.missionInfo {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.missionTitle {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+.missionReward {
+  color: #222;
+  font-size: 15px;
+}

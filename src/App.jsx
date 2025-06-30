@@ -11,6 +11,7 @@ import MyPage from "./pages/mypage/MyPage";
 import Settlement from "./pages/mypage/Settlement";
 import Summary from "./pages/mypage/Summary";
 import Temp from "./pages/temp/Temp";
+import MainOffline from './pages/main/MainOffline';
 
 export default function App() {
 
@@ -22,6 +23,7 @@ export default function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/delivery" element={<Map />} />
+          <Route path="/main/offline" element={<MainOffline />} />
           <Route path="/delivery/:orderId" element={<DeliveryStatus />} />
           <Route path="/delivery/:orderId/complete" element={<CompleteDelivery />} />
           <Route path="/mypage" element={<MyPage />} />
