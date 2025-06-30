@@ -1,0 +1,20 @@
+.tabBar {
+  display: flex;
+  margin-top: 10px;
+  border-bottom: 1.5px solid #eee;
+}
+.tab {
+  flex: 1;
+  padding: 16px 0 12px 0;
+  font-size: 16px;
+  border: none;
+  background: none;
+  color: #aaa;
+  font-weight: 500;
+  cursor: pointer;
+}
+.active {
+  color: #222;
+  border-bottom: 2.5px solid #222;
+  background: #fff;
+}
