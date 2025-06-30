@@ -12,6 +12,7 @@ import Settlement from "./pages/mypage/Settlement";
 import Summary from "./pages/mypage/Summary";
 import Temp from "./pages/temp/Temp";
 import CallIncoming from "./pages/delivery/CallInComing";
+import GoToStore from "./pages/delivery/GoToStore";
 
 export default function App() {
 
@@ -30,6 +31,7 @@ export default function App() {
           <Route path="/summary" element={<Summary />} />
           <Route path="/temp" element={<Temp />} />
           <Route path="/delivery/call-incoming" element={<CallIncoming />} />
+          <Route path="/delivery/go-to-store" element={<GoToStore />} />
         </Route>
       </Routes>
     </BrowserRouter>
