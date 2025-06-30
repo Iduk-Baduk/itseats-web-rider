@@ -5,16 +5,15 @@ import MainTabBar from "../../components/main/MainTabBar";
 import MissionCard from "../../components/main/MissionCard";
 import styles from "./MainOffline.module.css";
 
-export default function MainOffline() {
-  const [toggle, setToggle] = useState(false);
+export default function MainOffline({ onToggle, initialToggle = false }) {
   const [tab, setTab] = useState("미션");
 
   return (
     <div className={styles.wrapper}>
       <MainHeader
         statusText="배달을 시작해보세요"
-        toggleValue={toggle}
-        onToggle={() => setToggle((prev) => !prev)}
+        toggleValue={initialToggle}
+        onToggle={onToggle}
         onProfileClick={() => alert("프로필 버튼 클릭")}
       />
       <MainMap />

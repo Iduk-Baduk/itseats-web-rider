@@ -1,4 +1,5 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import "./index.css";
 import Layout from "./layouts/Layout";
 import Landing from "./pages/members/Landing";
@@ -15,8 +16,29 @@ import CallIncoming from "./pages/delivery/CallInComing";
 import MainOffline from './pages/main/MainOffline';
 import MainOnline from "./pages/main/MainOnline";
 
-export default function App() {
+// 온라인/오프라인 상태를 관리하는 컴포넌트
+function MainWrapper() {
+  const navigate = useNavigate();
+  const [isOnline, setIsOnline] = useState(false);
 
+  // 상태 변경 시 페이지 전환
+  useEffect(() => {
+    navigate(isOnline ? '/main/online' : '/main/offline');
+  }, [isOnline, navigate]);
+
+  // 토글 핸들러
+  const handleToggle = () => {
+    setIsOnline(prev => !prev);
+  };
+
+  return isOnline ? (
+    <MainOnline onToggle={handleToggle} initialToggle={isOnline} />
+  ) : (
+    <MainOffline onToggle={handleToggle} initialToggle={isOnline} />
+  );
+}
+
+export default function App() {
   return (
     <BrowserRouter>
       <Routes>
@@ -25,7 +47,7 @@ export default function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/delivery" element={<Map />} />
-          <Route path="/main/offline" element={<MainOffline />} />
+          <Route path="/main/*" element={<MainWrapper />} />
           <Route path="/delivery/:orderId" element={<DeliveryStatus />} />
           <Route path="/delivery/:orderId/complete" element={<CompleteDelivery />} />
           <Route path="/mypage" element={<MyPage />} />
@@ -33,7 +55,6 @@ export default function App() {
           <Route path="/summary" element={<Summary />} />
           <Route path="/temp" element={<Temp />} />
           <Route path="/delivery/call-incoming" element={<CallIncoming />} />
-          <Route path="/main/online" element={<MainOnline />} />
         </Route>
       </Routes>
     </BrowserRouter>

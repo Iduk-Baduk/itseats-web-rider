@@ -5,8 +5,7 @@ import MainTabBar from "../../components/main/MainTabBar";
 import MissionCard from "../../components/main/MissionCard";
 import styles from "./MainOnline.module.css";
 
-export default function MainOnline() {
-  const [toggle, setToggle] = useState(true);
+export default function MainOnline({ onToggle, initialToggle = true }) {
   const [tab, setTab] = useState("미션");
 
   return (
@@ -14,8 +13,8 @@ export default function MainOnline() {
       {/* 상단 헤더 */}
       <MainHeader
         statusText="가까운 주문을 찾는 중"
-        toggleValue={toggle}
-        onToggle={() => setToggle((prev) => !prev)}
+        toggleValue={initialToggle}
+        onToggle={onToggle}
         onProfileClick={() => alert("프로필 버튼 클릭")}
         backgroundColor="#178351"   // 초록색
         color="#fff"                // 흰색 글씨
