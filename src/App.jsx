@@ -11,6 +11,7 @@ import MyPage from "./pages/mypage/MyPage";
 import Settlement from "./pages/mypage/Settlement";
 import Summary from "./pages/mypage/Summary";
 import Temp from "./pages/temp/Temp";
+import CallIncoming from "./pages/delivery/CallInComing";
 
 export default function App() {
 
@@ -28,6 +29,7 @@ export default function App() {
           <Route path="/settlement" element={<Settlement />} />
           <Route path="/summary" element={<Summary />} />
           <Route path="/temp" element={<Temp />} />
+          <Route path="/delivery/call-incoming" element={<CallIncoming />} />
         </Route>
       </Routes>
     </BrowserRouter>

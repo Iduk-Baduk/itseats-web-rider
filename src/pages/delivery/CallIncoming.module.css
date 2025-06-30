@@ -1,0 +1,136 @@
+/* CallIncoming.module.css */
+
+.wrapper {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background: #eaf6f2;
+  overflow: hidden;
+}
+
+.mapArea {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  z-index: 1;
+}
+
+.mapImg {
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  display: block;
+}
+
+/* 떠 있는 카드 시트 */
+.floatingSheet {
+  position: fixed;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  width: 98vw;             /* 거의 전체 화면 폭 */
+  max-width: 664px;        /* PC 등 큰 화면에서도 더 넓게 */
+  background: rgba(255,255,255,0.97);
+  border-radius: 22px 22px 0 0;
+  box-shadow: 0 -2px 24px rgba(0,0,0,0.12);
+  padding: 32px 28px 28px 28px;   /* 위/양옆/아래 여백도 더 넓게 */
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+/* 카드 안쪽 내용 */
+.serviceRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.serviceBadge {
+  background: #178351;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 8px;
+  padding: 2px 10px;
+}
+
+.serviceTitle {
+  font-size: 16px;
+  color: #222;
+  font-weight: 700;
+}
+
+.price {
+  font-size: 28px;
+  font-weight: bold;
+  color: #222;
+  margin-bottom: 10px;
+}
+
+.detailRow {
+  display: flex;
+  align-items: center;
+  font-size: 15px;
+  color: #666;
+  margin-bottom: 2px;
+  gap: 6px;
+}
+.infoIcon {
+  font-size: 15px;
+  color: #bbb;
+  margin-left: 2px;
+}
+.detailRowSub {
+  font-size: 14px;
+  color: #888;
+  margin-bottom: 10px;
+}
+
+.desc {
+  font-size: 12px;
+  color: #aaa;
+  margin-bottom: 16px;
+}
+
+.buttonRow {
+  display: flex;
+  gap: 12px;
+  margin-top: 2px;
+}
+
+.rejectBtn {
+  flex: 1;
+  background: #fff;
+  color: #178351;
+  border: 1.5px solid #178351;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 8px;
+  padding: 14px 0;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.rejectBtn:active {
+  background: #f1f4f6;
+}
+
+.acceptBtn {
+  flex: 2;
+  background: #178351;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px;
+  padding: 14px 0;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.acceptBtn:active {
+  background: #146a3a;
+}
