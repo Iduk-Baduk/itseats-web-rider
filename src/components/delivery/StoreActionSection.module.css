@@ -1,0 +1,53 @@
+.section {
+  margin: 14px 8px 0 8px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+  padding: 10px 12px 14px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+.actionRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.cancelBtn {
+  background: none;
+  color: #178351;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+}
+.callBtn {
+  background: none;
+  color: #178351;
+  border: none;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+.icon {
+  font-size: 18px;
+  margin-right: 5px;
+}
+.arriveBtn {
+  margin-top: 8px;
+  background: #178351;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 16px 0;
+  cursor: pointer;
+  width: 100%;
+}
