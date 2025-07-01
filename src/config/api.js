@@ -12,6 +12,6 @@ export const API_CONFIG = {
 
 export const API_ENDPOINTS = {
   DELIVERY: {
-    LOCATION: () => "/api/rider/location", // GET (배달 위치 조회)
+    LOCATION: () => "/api/rider/location", // POST (라이더 위치 전송)
   },
 };
