@@ -1,8 +1,6 @@
 {
-  "myLocation" : {
-	"location": {
-	  "lat": 37.5665,
-	  "lng": 126.9780
-	}
+  "api/rider/location": {
+    "lat": 37.5665,
+    "lng": 126.978
   }
 }
