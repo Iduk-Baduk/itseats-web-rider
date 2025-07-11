@@ -4,5 +4,5 @@ export const API_CONFIG = {
 
 export const API_ENDPOINTS = {
   // 배달 관련
-  READY_ORDER: (lat, lng) => ` /rider/ready-order?latitude=${lat}&longitude=${lng}`,
+  READY_ORDER: (lat, lng) => `/rider/ready-order?latitude=${lat}&longitude=${lng}`,
 };
