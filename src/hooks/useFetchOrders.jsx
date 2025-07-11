@@ -23,7 +23,7 @@ export default function useFetchOrders(location) {
         const endPoint = API_ENDPOINTS.READY_ORDER(latitude, longitude);
         const response = await axios.get(`${API_CONFIG.BASE_URL}${endPoint}`);
 
-        setOrders(response.data);
+        setOrders(response.data.data);
       } catch (error) {
         setApiError(error.message);
         console.error("주문을 가져오는 중 오류 발생:", error);
