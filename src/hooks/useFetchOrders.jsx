@@ -12,12 +12,10 @@ export default function useFetchOrders(location) {
   const throttledFetchOrders = useCallback(
     throttle(async (position) => {
       console.log("8초마다 위치 기반 주문 조회", position);
-      
       try {
-        const { latitude, longitude } = position;
-        const endPoint = API_ENDPOINTS.READY_ORDER(latitude, longitude);
-        const response = await axios.get(`${API_CONFIG.BASE_URL}${endPoint}`);
-        
+        // endpoint는 파라미터 없이 호출
+        const url = `${API_CONFIG.BASE_URL}/${API_ENDPOINTS.READY_ORDER()}`;
+        const response = await axios.get(url);
         // 응답 데이터 구조에 따라 조정
         const ordersData = response.data.data || response.data || [];
         setOrders(Array.isArray(ordersData) ? ordersData : []);
@@ -30,7 +28,6 @@ export default function useFetchOrders(location) {
     }, 8000), // 8초 간격
     []
   );
-  
 
   useEffect(() => {
     if (!location) {
@@ -38,7 +35,6 @@ export default function useFetchOrders(location) {
       setLoading(false);
       return;
     }
-
     // 위치가 변경될 때마다 throttled 함수 호출
     throttledFetchOrders(location);
   }, [location, throttledFetchOrders]);
