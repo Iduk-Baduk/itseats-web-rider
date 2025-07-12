@@ -1,10 +1,21 @@
 import { Link } from "react-router-dom";
 import useMyLocation from "../../hooks/useMyLocation";
 import useFetchOrders from "../../hooks/useFetchOrders";
+import { i } from "motion/react-client";
 
 export default function Map() {
   const { error, location } = useMyLocation(); // 사용자의 위치
   const { orders, loading, apiError } = useFetchOrders(location); // 위치를 기반으로 주문을 가져옵니다.
+
+  const handleOrderSelect = (order) => {
+    // 주문 선택 시 CallIncoming 페이지로 이동
+    navigate("/delivery/call-incoming", {
+      state: {  
+        order,
+        location,
+      },
+    });
+  };
 
   if (error) {
     return <div> 위치 에러! {error}</div>;
@@ -17,6 +28,15 @@ export default function Map() {
   }
   if (!orders || orders.length === 0) {
     return <div>현재 배달 가능한 주문이 없습니다.</div>;
+  }
+  if (orders) {
+    const order = orders[0]; // 첫 번째 주문을 선택
+    navigate("/delivery/call-incoming", {
+      state: {
+        order,
+        location,
+      },
+    });
   }
 
   console.log("현재 위치:", location);

@@ -2,6 +2,8 @@ import DeliveryMap from "../../components/delivery/DeliveryMap";
 import styles from "./CallIncoming.module.css";
 
 export default function CallIncoming() {
+
+  const {order } = location.state || {};
   return (
     <div className={styles.wrapper}>
       {/* 지도 영역 */}
