@@ -2,7 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import useMyLocation from "../../hooks/useMyLocation";
 import useFetchOrders from "../../hooks/useFetchOrders";
 import { i } from "motion/react-client";
-import React from "react"; // Added missing import for React
+import React, { useEffect } from "react"; // Added missing import for React
 
 export default function Map() {
   const navigate = useNavigate();
@@ -20,7 +20,7 @@ export default function Map() {
   };
 
   // 주문이 있을 때 자동 이동 (무한 루프 방지용 useEffect)
-  React.useEffect(() => {
+  useEffect(() => {
     if (orders && orders.length > 0) {
       const order = orders[0];
       navigate("/delivery/call-incoming", {

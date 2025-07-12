@@ -1,6 +1,6 @@
-import axios from "axios";
 import { throttle } from "lodash";
-import { API_CONFIG, API_ENDPOINTS } from "../config/api";
+import apiClient from "../services/apiClient";
+import { API_ENDPOINTS } from "../config/api";
 import { useEffect, useState, useCallback } from "react";
 
 export default function useFetchOrders(location) {
@@ -12,10 +12,9 @@ export default function useFetchOrders(location) {
   const throttledFetchOrders = useCallback(
     throttle(async (position) => {
       console.log("8초마다 위치 기반 주문 조회", position);
+
       try {
-        // endpoint는 파라미터 없이 호출
-        const url = `${API_CONFIG.BASE_URL}/${API_ENDPOINTS.READY_ORDER()}`;
-        const response = await axios.get(url);
+        const response = await apiClient.get(API_ENDPOINTS.READY_ORDER());
         // 응답 데이터 구조에 따라 조정
         const ordersData = response.data.data || response.data || [];
         setOrders(Array.isArray(ordersData) ? ordersData : []);
@@ -35,6 +34,7 @@ export default function useFetchOrders(location) {
       setLoading(false);
       return;
     }
+
     // 위치가 변경될 때마다 throttled 함수 호출
     throttledFetchOrders(location);
   }, [location, throttledFetchOrders]);
