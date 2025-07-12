@@ -134,3 +134,22 @@
 .acceptBtn:active {
   background: #146a3a;
 }
+
+/* 주문 정보 영역 */
+.orderInfo {
+  margin: 16px 0;
+  padding: 16px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.orderInfo > div {
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #333;
+}
+
+.orderInfo > div:last-child {
+  margin-bottom: 0;
+}
