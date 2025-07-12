@@ -1,0 +1,57 @@
+.wrapper {
+  background: #eaf6f2;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.mainCard {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  margin: 24px 0 0 0;
+  padding: 24px 0 24px 0;
+  width: 100vw;
+  max-width: 720px;
+  min-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  position: relative;
+}
+
+.storeCallBtn {
+  margin: 0 20px 8px 20px;
+  background: #fff;
+  color: #178351;
+  border: 1px solid #178351;
+  border-radius: 7px;
+  padding: 10px 0;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.cancelRow {
+  display: flex;
+  align-items: center;
+  margin: 0 20px 12px 20px;
+  font-size: 14px;
+}
+
+.cancelLabel {
+  color: #888;
+  margin-right: 6px;
+}
+
+.cancelBtn {
+  background: none;
+  color: #178351;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+}

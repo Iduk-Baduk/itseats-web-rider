@@ -1,0 +1,85 @@
+.sheet {
+  position: fixed;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  width: 100vw;
+  max-width: 672px;
+  background: #fff;
+  border-radius: 32px 32px 0 0;
+  box-shadow: 0 -4px 32px rgba(0,0,0,0.10);
+  padding: 38px 24px 32px 24px;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.title {
+  font-size: 20px;
+  color: #222;
+  text-align: center;
+  margin-bottom: 8px;
+  letter-spacing: 0.03em;
+}
+.title b {
+  font-weight: 700;
+}
+
+.amount {
+  font-size: 34px;
+  font-weight: bold;
+  color: #222;
+  text-align: center;
+  margin-bottom: 18px;
+  letter-spacing: 0.01em;
+}
+
+.feeBox {
+  background: #f3f3f3;
+  border-radius: 12px;
+  padding: 16px 14px;
+  margin-bottom: 20px;
+}
+.feeRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 16px;
+  color: #222;
+  margin-bottom: 6px;
+}
+.feeRow:last-child {
+  margin-bottom: 0;
+}
+
+.missionRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  font-size: 15px;
+}
+
+.missionHighlight {
+  color: #178351;
+  font-weight: 600;
+}
+
+.missionProgress {
+  color: #888;
+}
+
+.confirmBtn {
+  margin-top: 10px;
+  width: 100%;
+  background: #178351;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 20px;
+  font-weight: bold;
+  padding: 20px 0;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(23,131,81,0.07);
+}

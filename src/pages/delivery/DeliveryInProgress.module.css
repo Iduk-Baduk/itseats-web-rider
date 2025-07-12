@@ -1,0 +1,249 @@
+.wrapper {
+  background: #eaf6f2;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.mainCard {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  margin: 24px 0 0 0;
+  padding: 24px 0 24px 0;
+  width: 100vw;
+  max-width: 720px;
+  min-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  position: relative;
+}
+
+/* 상단 서비스명/주소/주문번호/복사 */
+.headerSection {
+  padding: 28px 32px 12px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: #fff;
+}
+
+.serviceRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 2px;
+}
+
+.service {
+  color: #f15a23;
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.04em;
+}
+
+.orderCode {
+  background: #178351;
+  color: #fff;
+  font-size: 13px;
+  width: 4.2em;
+  height: 1em;
+  font-weight: 700;
+  border-radius: 8px;
+  padding: 2px 12px;
+  letter-spacing: 0.04em;
+}
+
+.addressRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.address {
+  font-size: 17px;
+  font-weight: bold;
+  color: #178351;
+  letter-spacing: 0.04em;
+}
+
+.copyBtn {
+  background: none;
+  border: none;
+  color: #178351;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  margin-left: 10px;
+  padding: 0;
+}
+
+/* 고객 요청 */
+.requestBox {
+  background: #f8f9fa;
+  border-radius: 8px;
+  margin: 0 32px 18px 32px;
+  padding: 18px 18px 12px 18px;
+}
+
+.requestTitleRow {
+  display: flex;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.requestIcon {
+  font-size: 16px;
+  margin-right: 6px;
+}
+
+.requestTitle {
+  font-size: 15px;
+  font-weight: bold;
+  color: #222;
+}
+
+.requestText {
+  font-size: 15px;
+  color: #222;
+  margin-bottom: 10px;
+  letter-spacing: 0.03em;
+  line-height: 1.7;
+}
+
+.requestBtnRow {
+  display: flex;
+  gap: 10px;
+}
+
+.requestBtn {
+  background: #fff;
+  color: #178351;
+  border: 1.5px solid #178351;
+  border-radius: 7px;
+  padding: 8px 18px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* 주문 정보 */
+.menuSection {
+  padding: 0 32px;
+  margin-bottom: 20px;
+}
+
+.orderCodeBig {
+  font-size: 18px;
+  font-weight: bold;
+  color: #222;
+  margin-bottom: 8px;
+  letter-spacing: 0.04em;
+}
+
+.menuRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 16px;
+  margin-bottom: 6px;
+  letter-spacing: 0.03em;
+  line-height: 1.7;
+}
+
+.menuLabel {
+  color: #888;
+}
+
+.menuPrice {
+  font-weight: bold;
+  color: #222;
+}
+
+.menuDetail {
+  font-size: 14px;
+  color: #888;
+  margin-bottom: 6px;
+  letter-spacing: 0.03em;
+  line-height: 1.7;
+}
+
+.menuNotice {
+  font-size: 13px;
+  color: #888;
+  background: #f3f3f3;
+  border-radius: 5px;
+  padding: 6px 10px;
+  margin-top: 10px;
+}
+
+/* 지원센터 버튼 */
+.supportBtn {
+  width: calc(100% - 64px);
+  margin: 12px 32px 12px 32px;
+  background: #fff;
+  color: #178351;
+  border: 1.5px solid #178351;
+  border-radius: 7px;
+  padding: 13px 0;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.supportIcon {
+  font-size: 18px;
+  margin-right: 8px;
+}
+
+/* 사진 촬영 안내 */
+.photoGuide {
+  background: #f3f3f3;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin: 0 32px 16px 32px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 14px;
+  color: #666;
+}
+
+.photoIcon {
+  font-size: 20px;
+  margin-top: 2px;
+}
+
+.photoGuideSub {
+  color: #888;
+  font-size: 13px;
+}
+
+/* 배달상태 촬영 버튼 */
+.photoBtn {
+  width: calc(100% - 64px);
+  margin: 0 32px 16px 32px;
+  background: #178351;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 19px;
+  font-weight: bold;
+  padding: 20px 0;
+  cursor: pointer;
+}
+
+/* 하단 안내문구 */
+.bottomNotice {
+  font-size: 13px;
+  color: #888;
+  margin: 10px 32px 0 32px;
+  text-align: left;
+  line-height: 1.5;
+}

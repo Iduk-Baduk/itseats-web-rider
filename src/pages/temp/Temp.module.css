@@ -1,0 +1,15 @@
+.container {
+    padding-top: 72px;
+}
+
+.samples {
+    margin: 24px 20px;
+    box-sizing: border-box;
+}
+
+.button {
+    width: 100%;;
+}
+.lineButton {
+    width: 100%;;
+}

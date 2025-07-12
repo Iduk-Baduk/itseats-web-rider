@@ -1,0 +1,45 @@
+.wrapper {
+  position: relative;
+  height: 100vh;
+  height: 100dvh;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* 중앙 이미지 정렬 */
+.centerContent {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding-bottom: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.image {
+  width: 160px;
+  height: auto;
+}
+.centerContent p {
+    margin-top: 20px;
+    font-size: 18px;
+    line-height: 28px;
+    font-weight: 600;
+}
+
+/* 하단 고정 링크 영역 */
+.bottomLinks {
+  position: absolute;
+  bottom: 40px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 12px;
+}
+
+.button, .lineButton {
+    margin: 0 20px;
+}

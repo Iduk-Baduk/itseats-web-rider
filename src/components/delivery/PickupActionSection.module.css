@@ -1,0 +1,38 @@
+.actionSection {
+  margin: 0 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.supportBtn {
+  background: #fff;
+  color: #178351;
+  border: 1px solid #178351;
+  border-radius: 7px;
+  padding: 12px 0;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon {
+  font-size: 18px;
+  margin-right: 8px;
+}
+
+.pickupBtn {
+  background: #178351;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 18px 0;
+  cursor: pointer;
+  width: 100%;
+}
