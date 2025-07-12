@@ -63,9 +63,22 @@ export default function useMyLocation() {
       (err) => {
         setError(err.message);
       },
+      (err) => {
+        /* err.coode
+         * 1. PERMISSION_DENIED (권한 거부)
+         * 2. POSITION_UNAVAILABLE (kCLErrorLocationUnknown 이에 해당)
+         * 3. TIMEOUT (시간 초과)
+         */
+
+        if (err.code === error.POSITION_UNAVAILABLE) {
+          console.warn("일시적으로 위치를 가져올 수 없습니다. 재시도 중...");
+          return;
+        }
+      },
       {
         enableHighAccuracy: true, // 높은 정확도 요청
         maximumAge: 10000, // 10초 동안 캐시된 위치 사용
+        timeout: 5000, // 5초 후에 타임아웃
       }
     );
 
