@@ -135,6 +135,18 @@
   background: #146a3a;
 }
 
+.rejectBtn:disabled,
+.acceptBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.rejectBtn:disabled:active,
+.acceptBtn:disabled:active {
+  background: inherit;
+  transform: none;
+}
+
 /* 주문 정보 영역 */
 .orderInfo {
   margin: 16px 0;

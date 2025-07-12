@@ -1,13 +1,75 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import apiClient from "../../services/apiClient";
+import { API_ENDPOINTS } from "../../config/api";
 import DeliveryMap from "../../components/delivery/DeliveryMap";
 import styles from "./CallIncoming.module.css";
 
 export default function CallIncoming() {
   const location = useLocation();
+  const navigate = useNavigate();
   const { order, location: riderLocation } = location.state || {};
+  const [isLoading, setIsLoading] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(31);
 
   console.log("전달받은 주문 데이터:", order);
   console.log("전달받은 위치 데이터:", riderLocation);
+
+  // 타이머 기능
+  useEffect(() => {
+    if (timeLeft > 0) {
+      const timer = setTimeout(() => {
+        setTimeLeft(timeLeft - 1);
+      }, 1000);
+      return () => clearTimeout(timer);
+    } else {
+      // 시간이 다 됐을 때 자동으로 거절 처리
+      alert("응답 시간이 초과되었습니다. 주문이 자동으로 거절됩니다.");
+      navigate("/delivery");
+    }
+  }, [timeLeft, navigate]);
+
+  // 주문 거절 처리
+  const handleRejectOrder = async () => {
+    if (!order?.orderId) return;
+    
+    const rejectReason = prompt("거절 사유를 입력해주세요:");
+    if (!rejectReason) return;
+
+    setIsLoading(true);
+    try {
+      await apiClient.put(API_ENDPOINTS.REJECT_ORDER(order.orderId), {
+        rejectReason
+      });
+      alert("주문이 거절되었습니다.");
+      navigate("/delivery"); // 메인 페이지로 돌아가기
+    } catch (error) {
+      console.error("주문 거절 실패:", error);
+      alert("주문 거절에 실패했습니다. 다시 시도해주세요.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // 주문 수락 처리
+  const handleAcceptOrder = async () => {
+    if (!order?.orderId) return;
+    
+    setIsLoading(true);
+    try {
+      await apiClient.put(API_ENDPOINTS.ACCEPT_ORDER(order.orderId));
+      alert("주문이 수락되었습니다!");
+      // 매장으로 이동하는 페이지로 이동
+      navigate("/delivery/go-to-store", {
+        state: { order, location: riderLocation }
+      });
+    } catch (error) {
+      console.error("주문 수락 실패:", error);
+      alert("주문 수락에 실패했습니다. 다시 시도해주세요.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   // 주문 데이터가 없을 경우 기본값 처리
   if (!order) {
@@ -52,8 +114,20 @@ export default function CallIncoming() {
           * 일부 매장의 조리완료 시간은 과거 배달 기록으로 계산됩니다.
         </div>
         <div className={styles.buttonRow}>
-          <button className={styles.rejectBtn}>거절</button>
-          <button className={styles.acceptBtn}>주문 수락 · 31초</button>
+          <button 
+            className={styles.rejectBtn}
+            onClick={handleRejectOrder}
+            disabled={isLoading}
+          >
+            {isLoading ? "처리 중..." : "거절"}
+          </button>
+          <button 
+            className={styles.acceptBtn}
+            onClick={handleAcceptOrder}
+            disabled={isLoading}
+          >
+            {isLoading ? "처리 중..." : `주문 수락 · ${timeLeft}초`}
+          </button>
         </div>
       </div>
     </div>
