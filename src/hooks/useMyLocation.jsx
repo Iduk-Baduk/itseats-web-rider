@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 
 /* 사용자의 현재 위치를 추적하는 커스텀 훅
-* 이 훅은 사용자의 위치를 실시간으로 추적하고, 위치가 변경될 때마다 상태를 업데이트합니다.
-* 또한 위치 추적 중 오류가 발생할 경우 오류 메시지를 반환합니다.
-* 이 훅은 컴포넌트가 마운트될 때 위치 추적을 시작하고, 컴포넌트가 언마운트될 때 위치 추적을 중지합니다.
+ * 이 훅은 사용자의 위치를 실시간으로 추적하고, 위치가 변경될 때마다 상태를 업데이트합니다.
+ * 또한 위치 추적 중 오류가 발생할 경우 오류 메시지를 반환합니다.
+ * 이 훅은 컴포넌트가 마운트될 때 위치 추적을 시작하고, 컴포넌트가 언마운트될 때 위치 추적을 중지합니다.
  */
 export default function useMyLocation() {
   const [location, setLocation] = useState(null);
@@ -21,13 +21,15 @@ export default function useMyLocation() {
     // 두 좌표 간의 거리를 계산하는 함수 (미터 단위)
     const calculateDistance = (lat1, lon1, lat2, lon2) => {
       const R = 6371000; // 지구의 반지름 (미터)
-      const dLat = (lat2 - lat1) * Math.PI / 180;
-      const dLon = (lon2 - lon1) * Math.PI / 180;
-      const a = 
-        Math.sin(dLat/2) * Math.sin(dLat/2) +
-        Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
-        Math.sin(dLon/2) * Math.sin(dLon/2);
-      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+      const dLat = ((lat2 - lat1) * Math.PI) / 180;
+      const dLon = ((lon2 - lon1) * Math.PI) / 180;
+      const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos((lat1 * Math.PI) / 180) *
+          Math.cos((lat2 * Math.PI) / 180) *
+          Math.sin(dLon / 2) *
+          Math.sin(dLon / 2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
       return R * c;
     };
 
@@ -54,17 +56,16 @@ export default function useMyLocation() {
           }
         }
 
-        console.log('위치 업데이트:', newPosition);
+        console.log("위치 업데이트:", newPosition);
         lastPosition = newPosition;
         setLocation(newPosition);
       },
       (err) => {
         setError(err.message);
       },
-      { 
+      {
         enableHighAccuracy: true, // 높은 정확도 요청
         maximumAge: 10000, // 10초 동안 캐시된 위치 사용
-        timeout: 15000 // 15초 타임아웃
       }
     );
 
