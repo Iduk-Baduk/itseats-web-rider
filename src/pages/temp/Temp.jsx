@@ -6,7 +6,7 @@ import styles from "./Temp.module.css";
 import TextInput from "../../components/basic/TextInput";
 import UpperTextInput from "../../components/basic/UpperTextInput";
 import RadioButton from "../../components/basic/RadioButton";
-import Checkbox from "../../components/basic/Checkbox";
+import CheckBox from "../../components/basic/CheckBox";
 import ComboBox from "../../components/basic/ComboBox";
 import Button from "../../components/basic/Button";
 import LineButton from "../../components/basic/LineButton";
@@ -69,8 +69,8 @@ export default function MyPage() {
         </div>
         {/* 체크박스 */}
         <div className={styles.samples}>
-          <Checkbox checked={true} onChange={() => {}} label="체크박스" />
-          <Checkbox
+          <CheckBox checked={true} onChange={() => {}} label="체크박스" />
+          <CheckBox
             type="radio"
             checked={false}
             onChange={() => {}}
