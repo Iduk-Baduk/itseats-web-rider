@@ -11,7 +11,7 @@ import MyPage from "./pages/mypage/MyPage";
 import Settlement from "./pages/mypage/Settlement";
 import Summary from "./pages/mypage/Summary";
 import Temp from "./pages/temp/Temp";
-import CallIncoming from "./pages/delivery/CallInComing";
+import CallIncoming from "./pages/delivery/CallIncoming";
 import MainOffline from './pages/main/MainOffline';
 import MainOnline from "./pages/main/MainOnline";
 import GoToStore from "./pages/delivery/GoToStore";
