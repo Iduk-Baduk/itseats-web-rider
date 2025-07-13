@@ -6,6 +6,7 @@ import UpperTextInput from "../../components/basic/UpperTextInput";
 import CheckBox from "../../components/basic/CheckBox";
 import Button from "../../components/basic/Button";
 import { userAPI } from "../../services/userAPI";
+import { login } from "../../config/auth";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -46,6 +47,7 @@ export default function Register() {
       const response = await userAPI.register(form);
 
       if (response.success) {
+        await login(form.username, form.password);
         navigate("/rider-register");
       } else {
         alert("회원가입에 실패했습니다. 다시 시도해주세요.");

@@ -6,6 +6,8 @@ import UpperTextInput from "../../components/basic/UpperTextInput";
 import ComboBox from "../../components/basic/ComboBox";
 import Button from "../../components/basic/Button";
 import { getProvinces, getCitiesByProvince } from "../../utils/regionsUtils";
+import { userAPI } from "../../services/userAPI";
+import { a } from "motion/react-client";
 
 export default function RiderRegister() {
   const navigate = useNavigate();
@@ -16,7 +18,6 @@ export default function RiderRegister() {
     provinces: "서울특별시",
     cities: "종로구"
   });
-  const [agreeTerms, setAgreeTerms] = useState(false);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -33,11 +34,19 @@ export default function RiderRegister() {
     }));
   }, [form.provinces, form.cities]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log("Form submitted:", form);
-    // TODO
+    try {
+      const response = await userAPI.riderRegister(form);
+      if (response.success) {
+        navigate("/delivery");
+      } else {
+        alert("라이더 등록에 실패했습니다.");
+      }
+    } catch (error) {
+      console.error("라이더 등록 오류:", error);
+    }
   }
 
   return (

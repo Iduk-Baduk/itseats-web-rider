@@ -14,12 +14,13 @@ apiClient.interceptors.request.use(
 
     // 로그인 API는 토큰이 필요 없음 (url이 문자열인지 확인 후 체크)
     const isLoginRequest = typeof config.url === "string" && config.url.includes("/login");
+    const isSignUpRequest = typeof config.url === "string" && config.url.includes("/sign-up");
 
-    if (!isLoginRequest) {
+    if (!isLoginRequest && !isSignUpRequest) {
       // localStorage에서 토큰 가져오기
       const token = localStorage.getItem("token");
       if (token) {
-        config.headers["Access-Token"] = token;
+        config.headers["Authorization"] = `Bearer ${token}`;
       } else {
         // 토큰이 없으면 에러
         console.error("토큰이 없습니다. 인증이 필요합니다.");
