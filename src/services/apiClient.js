@@ -15,14 +15,19 @@ apiClient.interceptors.request.use(
   (config) => {
     console.log("API 요청:", config.method?.toUpperCase(), config.url);
 
-    // localStorage에서 토큰 가져오기
-    const token = localStorage.getItem("token");
-    if (token) {
-      config.headers["Authorization"] = `Bearer ${token}`;
-    } else {
-      // 토큰이 없으면 에러
-      console.error("토큰이 없습니다. 인증이 필요합니다.");
-      throw new Error("인증이 필요합니다.");
+    // 로그인 API는 토큰이 필요 없음
+    const isLoginRequest = config.url?.includes('/auth/login');
+    
+    if (!isLoginRequest) {
+      // localStorage에서 토큰 가져오기
+      const token = localStorage.getItem("token");
+      if (token) {
+        config.headers["Authorization"] = `Bearer ${token}`;
+      } else {
+        // 토큰이 없으면 에러
+        console.error("토큰이 없습니다. 인증이 필요합니다.");
+        throw new Error("인증이 필요합니다.");
+      }
     }
 
     // multipart/form-data 요청일 때는 Content-Type을 삭제하여 브라우저가 자동 설정하도록 함
