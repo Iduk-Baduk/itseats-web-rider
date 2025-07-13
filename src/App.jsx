@@ -5,6 +5,7 @@ import Layout from "./layouts/Layout";
 import Landing from "./pages/members/Landing";
 import Login from "./pages/members/Login";
 import Register from "./pages/members/Register";
+import RiderRegister from "./pages/members/RiderRegister";
 import Map from "./pages/delivery/Map";
 import DeliveryStatus from "./pages/delivery/DeliveryStatus";
 import MyPage from "./pages/mypage/MyPage";
@@ -50,6 +51,7 @@ export default function App() {
           <Route index element={<Landing />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/rider-register" element={<RiderRegister />} />
           <Route path="/delivery" element={<Map />} />
           <Route path="/main/*" element={<MainWrapper />} />
           <Route path="/delivery/:orderId" element={<DeliveryStatus />} />

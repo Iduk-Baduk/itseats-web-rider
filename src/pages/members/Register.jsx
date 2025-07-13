@@ -33,6 +33,8 @@ export default function Register() {
 
     console.log("Form submitted:", form);
     // TODO
+
+    navigate("/rider-register");
   }
 
   return (
@@ -114,7 +116,7 @@ export default function Register() {
           label="배달 파트너 이용약관에 동의합니다."
           className={styles.checkbox}
         />
-        <Button className={styles.button}>다음</Button>
+        <Button className={styles.button} onClick={handleSubmit}>다음</Button>
       </div>
     </>
   );
