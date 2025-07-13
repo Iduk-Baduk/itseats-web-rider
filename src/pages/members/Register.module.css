@@ -17,8 +17,15 @@
     margin-bottom: 12px;
 }
 .checkbox {
-    margin: 12px 0 48px;
+    margin: 12px 0 24px;
 }
 .button {
     width: 100%;;
+}
+
+.error {
+    color: red;
+    font-size: 16px;
+    margin-bottom: 24px;
+    text-align: center;
 }

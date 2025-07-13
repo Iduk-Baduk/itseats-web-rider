@@ -5,6 +5,7 @@ import styles from "./Register.module.css";
 import UpperTextInput from "../../components/basic/UpperTextInput";
 import CheckBox from "../../components/basic/CheckBox";
 import Button from "../../components/basic/Button";
+import { userAPI } from "../../services/userAPI";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -19,6 +20,7 @@ export default function Register() {
     phone: ""
   });
   const [agreeTerms, setAgreeTerms] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -28,13 +30,30 @@ export default function Register() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log("Form submitted:", form);
-    // TODO
+    if (!agreeTerms) {
+      alert("약관에 동의해야 합니다.");
+      return;
+    }
+    else if (form.password !== form.passwordConfirm) {
+      alert("비밀번호가 일치하지 않습니다.");
+      return;
+    }
 
-    navigate("/rider-register");
+    try {
+      const response = await userAPI.register(form);
+
+      if (response.success) {
+        navigate("/rider-register");
+      } else {
+        alert("회원가입에 실패했습니다. 다시 시도해주세요.");
+      }
+    } catch (error) {
+      console.error("회원가입 오류:", error);
+      setError(error.message || "회원가입에 실패했습니다.");
+    }
   }
 
   return (
@@ -116,6 +135,7 @@ export default function Register() {
           label="배달 파트너 이용약관에 동의합니다."
           className={styles.checkbox}
         />
+        {error && <p className={styles.error}>{error}</p>}
         <Button className={styles.button} onClick={handleSubmit}>다음</Button>
       </div>
     </>
