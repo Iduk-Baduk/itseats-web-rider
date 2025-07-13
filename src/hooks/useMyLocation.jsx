@@ -61,10 +61,10 @@ export default function () {
         setLocation(newPosition);
       },
       (err) => {
-        setError(err.message);
-        if (err.code === error.POSITION_UNAVAILABLE) {
+        if (err.code === error.POSITION_UNAVAILABLE || err.code === 2) {
           console.warn("일시적으로 위치를 가져올 수 없습니다. 재시도 중...");
-          return;
+        } else {
+          setError(err.message);
         }
       },
       {
