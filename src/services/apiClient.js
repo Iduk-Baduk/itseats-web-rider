@@ -22,7 +22,8 @@ apiClient.interceptors.request.use(
       // localStorage에서 토큰 가져오기
       const token = localStorage.getItem("token");
       if (token) {
-        config.headers["Access-Token"] = token;
+        // 표준 Authorization 헤더도 함께 전송
+        config.headers.Authorization = `Bearer ${token}`;
       } else {
         // 토큰이 없으면 에러
         console.error("토큰이 없습니다. 인증이 필요합니다.");
