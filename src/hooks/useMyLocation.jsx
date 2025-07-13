@@ -1,14 +1,13 @@
 import { useEffect, useState, useRef } from "react";
-import { updateRiderLocation } from "../services/locationService";
 import { isAuthenticated } from "../config/auth";
-import { calculateDistance } from "../services/locationService";
+import { calculateDistance, updateRiderLocationNormal } from "../services/locationService.js";
 
 /* 사용자의 현재 위치를 추적하는 커스텀 훅
  * 이 훅은 사용자의 위치를 실시간으로 추적하고, 위치가 변경될 때마다 상태를 업데이트합니다.
  * 또한 위치 추적 중 오류가 발생할 경우 오류 메시지를 반환합니다.
  * 이 훅은 컴포넌트가 마운트될 때 위치 추적을 시작하고,
  * 컴포넌트가 언마운트될 때 위치 추적을 중지합니다.
- * 
+ *
  * 추가로 라이더의 위치를 서버로 자동 전송합니다.
  */
 export default function useMyLocation() {
@@ -25,8 +24,13 @@ export default function useMyLocation() {
       return;
     }
 
+    console.log("📤 서버로 전송할 좌표:", {
+      latitude: position.latitude,
+      longitude: position.longitude,
+    });
+
     try {
-      await updateRiderLocation(position.latitude, position.longitude);
+      await updateRiderLocationNormal(position.latitude, position.longitude);
       lastUploadedPosition.current = position;
       uploadAttempts.current = 0; // 성공 시 재시도 횟수 초기화
       console.log("라이더 위치 서버 업데이트 성공:", position);
@@ -53,10 +57,18 @@ export default function useMyLocation() {
     // 위치 추적을 시작하고, 위치가 변경될 때마다 상태를 업데이트
     const watchId = navigator.geolocation.watchPosition(
       (position) => {
+        console.log("🌍 브라우저에서 받은 원본 좌표:", {
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+          rawCoords: position.coords,
+        });
+
         const newPosition = {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
         };
+
+        console.log("🔍 newPosition 객체:", newPosition);
 
         // 이전 위치가 있고, 이동 거리가 임계값보다 작으면 업데이트하지 않음
         if (lastPosition) {

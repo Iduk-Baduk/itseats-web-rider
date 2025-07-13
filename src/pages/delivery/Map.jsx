@@ -2,7 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import useMyLocation from "../../hooks/useMyLocation";
 import useFetchOrders from "../../hooks/useFetchOrders";
 import { i } from "motion/react-client";
-import React, { useEffect } from "react"; // Added missing import for React
+import React, { useEffect } from "react";
 
 export default function Map() {
   const navigate = useNavigate();
@@ -19,7 +19,7 @@ export default function Map() {
     });
   };
 
-  // 주문이 있을 때 자동 이동 (무한 루프 방지용 useEffect)
+  // 주문이 있을 때 자동 이동
   useEffect(() => {
     if (orders && orders.length > 0) {
       const order = orders[0];
@@ -42,11 +42,12 @@ export default function Map() {
     return <div>주문을 불러오는 중 오류 발생: {apiError}</div>;
   }
   if (!orders || orders.length === 0) {
+    console.log("🔍 주문이 없어서 대기 중:", { orders, ordersLength: orders?.length });
     return <div>현재 배달 가능한 주문이 없습니다.</div>;
   }
 
-  console.log("현재 위치:", location);
-  console.log("주문 목록:", orders);
+  console.log("📍 현재 위치:", location);
+  console.log("📦 주문 목록:", orders);
 
   return (
     <div
