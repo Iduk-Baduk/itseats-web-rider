@@ -17,6 +17,7 @@
     "express": "^5.1.0",
     "lodash": "^4.17.21",
     "motion": "^12.18.1",
+    "multer": "^2.0.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-kakao-maps-sdk": "^1.2.0",
