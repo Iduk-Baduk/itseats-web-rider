@@ -10,7 +10,7 @@ export default function CallIncoming() {
   const navigate = useNavigate();
   const { order, location: riderLocation } = location.state || {};
   const [isLoading, setIsLoading] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(31);
+  const [timeLeft, setTimeLeft] = useState(60);
 
   console.log("전달받은 주문 데이터:", order);
   console.log("전달받은 위치 데이터:", riderLocation);
@@ -32,14 +32,14 @@ export default function CallIncoming() {
   // 주문 거절 처리
   const handleRejectOrder = async () => {
     if (!order?.orderId) return;
-    
+
     const rejectReason = prompt("거절 사유를 입력해주세요:");
     if (!rejectReason) return;
 
     setIsLoading(true);
     try {
       await apiClient.put(API_ENDPOINTS.REJECT_ORDER(order.orderId), {
-        rejectReason
+        rejectReason,
       });
       alert("주문이 거절되었습니다.");
       navigate("/delivery"); // 메인 페이지로 돌아가기
@@ -54,14 +54,14 @@ export default function CallIncoming() {
   // 주문 수락 처리
   const handleAcceptOrder = async () => {
     if (!order?.orderId) return;
-    
+
     setIsLoading(true);
     try {
       await apiClient.put(API_ENDPOINTS.ACCEPT_ORDER(order.orderId));
       alert("주문이 수락되었습니다!");
       // 매장으로 이동하는 페이지로 이동
       navigate("/delivery/go-to-store", {
-        state: { order, location: riderLocation }
+        state: { order, location: riderLocation },
       });
     } catch (error) {
       console.error("주문 수락 실패:", error);
@@ -101,31 +101,29 @@ export default function CallIncoming() {
           <span className={styles.distance}>배달거리 {order.distance}km (실제 경로)</span>
           <span className={styles.infoIcon}>ⓘ</span>
         </div>
-        <div className={styles.detailRowSub}>
-          거리/배달팁·지급금 포함
-        </div>
+        <div className={styles.detailRowSub}>거리/배달팁·지급금 포함</div>
         <div className={styles.orderInfo}>
-          <div><strong>주문 번호:</strong> {order.orderId}</div>
-          <div><strong>주문 금액:</strong> {order.orderPrice?.toLocaleString()}원</div>
-          <div><strong>배달 주소:</strong> {order.address}</div>
-          <div><strong>주문 상태:</strong> {order.orderStatus}</div>
+          <div>
+            <strong>주문 번호:</strong> {order.orderId}
+          </div>
+          <div>
+            <strong>주문 금액:</strong> {order.orderPrice?.toLocaleString()}원
+          </div>
+          <div>
+            <strong>배달 주소:</strong> {order.address}
+          </div>
+          <div>
+            <strong>주문 상태:</strong> {order.orderStatus}
+          </div>
         </div>
         <div className={styles.desc}>
           * 일부 매장의 조리완료 시간은 과거 배달 기록으로 계산됩니다.
         </div>
         <div className={styles.buttonRow}>
-          <button 
-            className={styles.rejectBtn}
-            onClick={handleRejectOrder}
-            disabled={isLoading}
-          >
+          <button className={styles.rejectBtn} onClick={handleRejectOrder} disabled={isLoading}>
             {isLoading ? "처리 중..." : "거절"}
           </button>
-          <button 
-            className={styles.acceptBtn}
-            onClick={handleAcceptOrder}
-            disabled={isLoading}
-          >
+          <button className={styles.acceptBtn} onClick={handleAcceptOrder} disabled={isLoading}>
             {isLoading ? "처리 중..." : `주문 수락 · ${timeLeft}초`}
           </button>
         </div>
