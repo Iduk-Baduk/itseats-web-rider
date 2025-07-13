@@ -8,6 +8,7 @@ export default function DeliveryCompleteSummary({
   missionText,
   missionProgress,
   onConfirm,
+  isLoading = false,
 }) {
   return (
     <div className={styles.sheet}>
@@ -29,7 +30,17 @@ export default function DeliveryCompleteSummary({
         <span className={styles.missionHighlight}>{missionText}</span>
         <span className={styles.missionProgress}>{missionProgress}</span>
       </div>
-      <button className={styles.confirmBtn} onClick={onConfirm}>확인</button>
+      <button 
+        className={styles.confirmBtn} 
+        onClick={onConfirm}
+        disabled={isLoading}
+        style={{ 
+          opacity: isLoading ? 0.6 : 1,
+          cursor: isLoading ? 'not-allowed' : 'pointer'
+        }}
+      >
+        {isLoading ? "처리 중..." : "확인"}
+      </button>
     </div>
   );
 }
