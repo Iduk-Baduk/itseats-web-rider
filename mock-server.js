@@ -97,8 +97,23 @@ app.put('/api/rider/:orderId/pickup', authRider, (req, res) => {
 
 // --- 7. 배달 인증 사진 업로드 ---
 import multer from 'multer';
+import fs from 'fs';
+
+// uploads 디렉토리가 없으면 생성
+if (!fs.existsSync('uploads')) {
+  fs.mkdirSync('uploads');
+}
+
 const upload = multer({ dest: 'uploads/' });
+
 app.post('/api/rider/:orderId/picture', authRider, upload.single('image'), (req, res) => {
+  console.log('사진 업로드 요청:', req.params.orderId);
+  console.log('업로드된 파일:', req.file);
+  
+  if (!req.file) {
+    return res.status(400).json(error(400, '이미지 파일이 필요합니다.'));
+  }
+  
   // 실제로는 req.file에서 파일 정보 확인
   res.json(success('배달 인증 사진 업로드 성공', {
     imageUrl: 'https://cdn.example.com/photo/' + req.params.orderId + '.jpg'
