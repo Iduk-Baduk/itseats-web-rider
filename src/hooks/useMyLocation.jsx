@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
  * 또한 위치 추적 중 오류가 발생할 경우 오류 메시지를 반환합니다.
  * 이 훅은 컴포넌트가 마운트될 때 위치 추적을 시작하고, 컴포넌트가 언마운트될 때 위치 추적을 중지합니다.
  */
-export default function useMyLocation() {
+export default function () {
   const [location, setLocation] = useState(null);
   const [error, setError] = useState(null);
 
@@ -61,11 +61,16 @@ export default function useMyLocation() {
         setLocation(newPosition);
       },
       (err) => {
-        setError(err.message);
+        if (err.code === error.POSITION_UNAVAILABLE || err.code === 2) {
+          console.warn("일시적으로 위치를 가져올 수 없습니다. 재시도 중...");
+        } else {
+          setError(err.message);
+        }
       },
       {
         enableHighAccuracy: true, // 높은 정확도 요청
         maximumAge: 10000, // 10초 동안 캐시된 위치 사용
+        timeout: 5000, // 5초 후에 타임아웃
       }
     );
 

@@ -1,10 +1,36 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import useMyLocation from "../../hooks/useMyLocation";
 import useFetchOrders from "../../hooks/useFetchOrders";
+import { i } from "motion/react-client";
+import React, { useEffect } from "react"; // Added missing import for React
 
 export default function Map() {
+  const navigate = useNavigate();
   const { error, location } = useMyLocation(); // 사용자의 위치
   const { orders, loading, apiError } = useFetchOrders(location); // 위치를 기반으로 주문을 가져옵니다.
+
+  const handleOrderSelect = (order) => {
+    // 주문 선택 시 CallIncoming 페이지로 이동
+    navigate("/delivery/call-incoming", {
+      state: {
+        order,
+        location,
+      },
+    });
+  };
+
+  // 주문이 있을 때 자동 이동 (무한 루프 방지용 useEffect)
+  useEffect(() => {
+    if (orders && orders.length > 0) {
+      const order = orders[0];
+      navigate("/delivery/call-incoming", {
+        state: {
+          order,
+          location,
+        },
+      });
+    }
+  }, [orders, location, navigate]);
 
   if (error) {
     return <div> 위치 에러! {error}</div>;
