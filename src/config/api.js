@@ -1,11 +1,11 @@
 export const API_CONFIG = {
-  BASE_URL: import.meta.env.VITE_API_BASE_URL || "http://localhost:8080",
+  BASE_URL: import.meta.env.VITE_API_BASE_URL || "http://localhost:8080/api",
 };
 
 export const API_ENDPOINTS = {
   // 인증 관련
-  LOGIN: () => "/auth/login",
-  LOGOUT: () => "/auth/logout",
+  LOGIN: () => "/login",
+  LOGOUT: () => "/logout",
 
   // 배달 관련
   READY_ORDER: () => "/rider/request",
