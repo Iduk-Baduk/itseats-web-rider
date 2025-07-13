@@ -6,9 +6,9 @@ import DeliveryMap from "../../components/delivery/DeliveryMap";
 import styles from "./CallIncoming.module.css";
 
 export default function CallIncoming() {
-  const location = useLocation();
+  const routerLocation = useLocation();
   const navigate = useNavigate();
-  const { order, location: riderLocation } = location.state || {};
+  const { order, location: riderLocation } = routerLocation.state || {}; // routerLocation에서 상태 가져오기
   const [isLoading, setIsLoading] = useState(false);
   const [timeLeft, setTimeLeft] = useState(60);
 
@@ -31,21 +31,39 @@ export default function CallIncoming() {
 
   // 주문 거절 처리
   const handleRejectOrder = async () => {
-    if (!order?.orderId) return;
+    if (!order?.orderId) {
+      alert("주문 정보가 없습니다.");
+      return;
+    }
 
     const rejectReason = prompt("거절 사유를 입력해주세요:");
     if (!rejectReason) return;
 
     setIsLoading(true);
+    console.log("🚫 주문 거절 요청:", {
+      orderId: order.orderId,
+      rejectReason,
+      endpoint: API_ENDPOINTS.REJECT_ORDER(order.orderId)
+    });
+
     try {
-      await apiClient.put(API_ENDPOINTS.REJECT_ORDER(order.orderId), {
+      const response = await apiClient.put(API_ENDPOINTS.REJECT_ORDER(order.orderId), {
         rejectReason,
       });
+      
+      console.log("🚫 주문 거절 성공:", response.data);
       alert("주문이 거절되었습니다.");
       navigate("/delivery"); // 메인 페이지로 돌아가기
     } catch (error) {
-      console.error("주문 거절 실패:", error);
-      alert("주문 거절에 실패했습니다. 다시 시도해주세요.");
+      console.error("🚫 주문 거절 실패:", error);
+      console.error("🚫 에러 상세:", {
+        status: error.response?.status,
+        message: error.response?.data?.message || error.message,
+        data: error.response?.data
+      });
+      
+      const errorMessage = error.response?.data?.message || "주문 거절에 실패했습니다.";
+      alert(`거절 실패: ${errorMessage}`);
     } finally {
       setIsLoading(false);
     }
@@ -53,19 +71,37 @@ export default function CallIncoming() {
 
   // 주문 수락 처리
   const handleAcceptOrder = async () => {
-    if (!order?.orderId) return;
+    if (!order?.orderId) {
+      alert("주문 정보가 없습니다.");
+      return;
+    }
 
     setIsLoading(true);
+    console.log("✅ 주문 수락 요청:", {
+      orderId: order.orderId,
+      endpoint: API_ENDPOINTS.ACCEPT_ORDER(order.orderId)
+    });
+
     try {
-      await apiClient.put(API_ENDPOINTS.ACCEPT_ORDER(order.orderId));
+      const response = await apiClient.put(API_ENDPOINTS.ACCEPT_ORDER(order.orderId));
+      
+      console.log("✅ 주문 수락 성공:", response.data);
       alert("주문이 수락되었습니다!");
+      
       // 매장으로 이동하는 페이지로 이동
       navigate("/delivery/go-to-store", {
         state: { order, location: riderLocation },
       });
     } catch (error) {
-      console.error("주문 수락 실패:", error);
-      alert("주문 수락에 실패했습니다. 다시 시도해주세요.");
+      console.error("✅ 주문 수락 실패:", error);
+      console.error("✅ 에러 상세:", {
+        status: error.response?.status,
+        message: error.response?.data?.message || error.message,
+        data: error.response?.data
+      });
+      
+      const errorMessage = error.response?.data?.message || "주문 수락에 실패했습니다.";
+      alert(`수락 실패: ${errorMessage}`);
     } finally {
       setIsLoading(false);
     }
