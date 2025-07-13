@@ -15,9 +15,25 @@ export default function useFetchOrders(location) {
 
       try {
         const response = await apiClient.get(API_ENDPOINTS.READY_ORDER());
+        console.log("📦 API 응답 전체:", response.data);
+        
         // 응답 데이터 구조에 따라 조정
-        const ordersData = response.data.data || response.data || [];
-        setOrders(Array.isArray(ordersData) ? ordersData : []);
+        const responseData = response.data.data || response.data;
+        console.log("📦 추출된 데이터:", responseData);
+        
+        // 단일 객체인 경우 배열로 변환, 배열인 경우 그대로 사용
+        let ordersData;
+        if (Array.isArray(responseData)) {
+          ordersData = responseData;
+        } else if (responseData && typeof responseData === 'object') {
+          // 단일 주문 객체를 배열로 변환
+          ordersData = [responseData];
+        } else {
+          ordersData = [];
+        }
+        
+        console.log("📦 최종 주문 데이터:", ordersData);
+        setOrders(ordersData);
         setLoading(false);
       } catch (error) {
         setApiError(error.message);
