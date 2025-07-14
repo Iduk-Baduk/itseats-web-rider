@@ -2,12 +2,28 @@ import { Link, useNavigate } from "react-router-dom";
 import useMyLocation from "../../hooks/useMyLocation";
 import useFetchOrders from "../../hooks/useFetchOrders";
 import { i } from "motion/react-client";
-import React, { useEffect } from "react";
+import React, { useEffect, useCallback, useRef } from "react";
 
 export default function Map() {
   const navigate = useNavigate();
-  const { error, location } = useMyLocation(); // 사용자의 위치
-  const { orders, loading, apiError } = useFetchOrders(location); // 위치를 기반으로 주문을 가져옵니다.
+  const refetchRef = useRef(null);
+  
+  // 위치 업데이트 후 주문 목록 새로고침을 위한 콜백
+  const handleLocationUpdate = useCallback((newLocation) => {
+    console.log("📍 위치 업데이트 완료 - 주문 목록 즉시 새로고침:", newLocation);
+    // 위치 업데이트 성공 시 주문 목록을 즉시 새로고침
+    if (refetchRef.current) {
+      refetchRef.current();
+    }
+  }, []);
+  
+  const { error, location } = useMyLocation(handleLocationUpdate); // 위치 업데이트 콜백 전달
+  const { orders, loading, apiError, refetch } = useFetchOrders(location); // 위치를 기반으로 주문을 가져옵니다.
+  
+  // refetch 함수를 ref에 저장
+  useEffect(() => {
+    refetchRef.current = refetch;
+  }, [refetch]);
 
   const handleOrderSelect = (order) => {
     // 주문 선택 시 CallIncoming 페이지로 이동

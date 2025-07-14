@@ -10,7 +10,7 @@ import { calculateDistance, updateRiderLocationNormal } from "../services/locati
  *
  * 추가로 라이더의 위치를 서버로 자동 전송합니다.
  */
-export default function useMyLocation() {
+export default function useMyLocation(onLocationUpdate) {
   const [location, setLocation] = useState(null);
   const [error, setError] = useState(null);
   const lastUploadedPosition = useRef(null);
@@ -33,7 +33,13 @@ export default function useMyLocation() {
       await updateRiderLocationNormal(position.latitude, position.longitude);
       lastUploadedPosition.current = position;
       uploadAttempts.current = 0; // 성공 시 재시도 횟수 초기화
-      console.log("라이더 위치 서버 업데이트 성공:", position);
+      console.log("✅ 라이더 위치 서버 업데이트 성공:", position);
+      
+      // 위치 업데이트 성공 시 콜백 호출 (주문 목록 새로고침 등)
+      if (onLocationUpdate && typeof onLocationUpdate === 'function') {
+        console.log("📱 위치 업데이트 성공 - 콜백 호출");
+        onLocationUpdate(position);
+      }
     } catch (error) {
       uploadAttempts.current++;
       console.error(`라이더 위치 서버 업데이트 실패 (시도: ${uploadAttempts.current}):`, error);
@@ -110,7 +116,7 @@ export default function useMyLocation() {
     return () => {
       navigator.geolocation.clearWatch(watchId); // 화면에서 벗어날 때 위치 추적 중지
     };
-  }, []);
+  }, [onLocationUpdate]); // onLocationUpdate 의존성 추가
 
   return { location, error };
 }
