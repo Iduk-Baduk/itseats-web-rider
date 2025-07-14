@@ -15,6 +15,12 @@ export default function useMyLocation(onLocationUpdate) {
   const [error, setError] = useState(null);
   const lastUploadedPosition = useRef(null);
   const uploadAttempts = useRef(0);
+  const onLocationUpdateRef = useRef(onLocationUpdate);
+
+  // 콜백 함수를 ref에 저장 (의존성 문제 해결)
+  useEffect(() => {
+    onLocationUpdateRef.current = onLocationUpdate;
+  }, [onLocationUpdate]);
 
   // 위치 업데이트를 서버로 전송하는 함수
   const sendLocationToServer = async (position) => {
@@ -36,9 +42,9 @@ export default function useMyLocation(onLocationUpdate) {
       console.log("✅ 라이더 위치 서버 업데이트 성공:", position);
       
       // 위치 업데이트 성공 시 콜백 호출 (주문 목록 새로고침 등)
-      if (onLocationUpdate && typeof onLocationUpdate === 'function') {
+      if (onLocationUpdateRef.current && typeof onLocationUpdateRef.current === 'function') {
         console.log("📱 위치 업데이트 성공 - 콜백 호출");
-        onLocationUpdate(position);
+        onLocationUpdateRef.current(position);
       }
     } catch (error) {
       uploadAttempts.current++;
@@ -100,9 +106,23 @@ export default function useMyLocation(onLocationUpdate) {
         sendLocationToServer(newPosition);
       },
       (err) => {
-        if (err.code === error.POSITION_UNAVAILABLE || err.code === 2) {
+        console.log("🚨 위치 추적 에러:", {
+          code: err.code,
+          message: err.message,
+          PERMISSION_DENIED: 1,
+          POSITION_UNAVAILABLE: 2,
+          TIMEOUT: 3
+        });
+
+        if (err.code === 2 || err.code === err.POSITION_UNAVAILABLE) {
           console.warn("일시적으로 위치를 가져올 수 없습니다. 재시도 중...");
+        } else if (err.code === 1 || err.code === err.PERMISSION_DENIED) {
+          console.error("위치 접근 권한이 거부되었습니다.");
+          setError("위치 접근 권한이 필요합니다.");
+        } else if (err.code === 3 || err.code === err.TIMEOUT) {
+          console.warn("위치 조회 시간이 초과되었습니다. 재시도 중...");
         } else {
+          console.error("위치 조회 에러:", err);
           setError(err.message);
         }
       },
@@ -116,7 +136,7 @@ export default function useMyLocation(onLocationUpdate) {
     return () => {
       navigator.geolocation.clearWatch(watchId); // 화면에서 벗어날 때 위치 추적 중지
     };
-  }, [onLocationUpdate]); // onLocationUpdate 의존성 추가
+  }, []); // 의존성 배열에서 onLocationUpdate 제거
 
   return { location, error };
 }
