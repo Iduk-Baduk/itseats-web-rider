@@ -208,10 +208,10 @@ export default function GoToStore() {
               lng: riderLocation.longitude,
             }}
             image={{
-              src: "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png",
+              src: "http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png",
               size: {
-                width: 24,
-                height: 35,
+                width: 32,
+                height: 40,
               },
             }}
             title="현재 위치 (라이더)"
@@ -226,10 +226,10 @@ export default function GoToStore() {
                   lng: displayOrder.storeLocation.lng,
                 }}
                 image={{
-                  src: "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png",
+                  src: "/images/landing/storeMarker.png",
                   size: {
-                    width: 32,
-                    height: 40,
+                    width: 24,
+                    height: 24,
                   },
                 }}
                 title={`${displayOrder.storeName} (목적지)`}
@@ -247,10 +247,10 @@ export default function GoToStore() {
                     lng: displayOrder.storeLocation.lng,
                   },
                 ]}
-                strokeWeight={3}
+                strokeWeight={2}
                 strokeColor="#FF6B35"
                 strokeOpacity={0.8}
-                strokeStyle="dash"
+                strokeStyle="shortdash"
               />
             </>
           )}

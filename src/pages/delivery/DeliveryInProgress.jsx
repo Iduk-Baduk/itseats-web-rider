@@ -62,27 +62,28 @@ export default function DeliveryInProgress() {
               lng: riderLocation.longitude,
             }}
             image={{
-              src: "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png",
+              src: "http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png",
               size: {
-                width: 24,
-                height: 35,
+                width: 32,
+                height: 40,
               },
             }}
             title="현재 위치 (라이더)"
           />
 
           {/* 배달지 위치 마커 (사용자 위치) */}
-          {order.deliveryLocation && (
+          {order.destination && (
             <>
+              {console.log("배달지 위치:", order.destination.lat, order.destination.lng)}
               <MapMarker
                 position={{
-                  lat: order.deliveryLocation.lat,
-                  lng: order.deliveryLocation.lng,
+                  lat: order.destination.lat,
+                  lng: order.destination.lng,
                 }}
                 image={{
                   src: "https://t1.daumcdn.net/localimg/localimages/07/2018/pc/img/marker_spot.png",
                   size: {
-                    width: 32,
+                    width: 28,
                     height: 40,
                   },
                 }}
@@ -97,14 +98,14 @@ export default function DeliveryInProgress() {
                     lng: riderLocation.longitude,
                   },
                   {
-                    lat: order.deliveryLocation.lat,
-                    lng: order.deliveryLocation.lng,
+                    lat: order.destination.lat,
+                    lng: order.destination.lng,
                   },
                 ]}
-                strokeWeight={4}
-                strokeColor="#2E7D32"
+                strokeWeight={3}
+                strokeColor="#4A90E2"
                 strokeOpacity={0.8}
-                strokeStyle="solid"
+                strokeStyle="shortdash"
               />
             </>
           )}

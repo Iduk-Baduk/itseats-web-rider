@@ -178,10 +178,10 @@ export default function CallIncoming() {
                 lng: riderLocation.longitude,
               }}
               image={{
-                src: "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png",
+                src: "/images/landing/riderMarker.png",
                 size: {
-                  width: 24,
-                  height: 35,
+                  width: 25,
+                  height: 25,
                 },
               }}
               title="현재 위치 (라이더)"
@@ -196,10 +196,10 @@ export default function CallIncoming() {
                     lng: order.storeLocation.lng,
                   }}
                   image={{
-                    src: "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png",
+                    src: "/images/landing/storeMarker.png",
                     size: {
                       width: 24,
-                      height: 35,
+                      height: 24,
                     },
                   }}
                   title={`${order.storeName} (픽업지)`}
@@ -217,51 +217,11 @@ export default function CallIncoming() {
                       lng: order.storeLocation.lng,
                     },
                   ]}
-                  strokeWeight={5}
+                  strokeWeight={2}
                   strokeColor="#FF6B35"
                   strokeOpacity={0.8}
-                  strokeStyle="solid"
+                  strokeStyle="shortdash"
                 />
-              </>
-            )}
-
-            {/* 배달지 마커 (배달지 정보가 있는 경우) */}
-            {order.deliveryLocation && (
-              <>
-                <MapMarker
-                  position={{
-                    lat: order.deliveryLocation.lat,
-                    lng: order.deliveryLocation.lng,
-                  }}
-                  image={{
-                    src: "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_blue.png",
-                    size: {
-                      width: 24,
-                      height: 35,
-                    },
-                  }}
-                  title="배달지"
-                />
-
-                {/* 매장에서 배달지까지의 경로선 */}
-                {order.storeLocation && (
-                  <Polyline
-                    path={[
-                      {
-                        lat: order.storeLocation.lat,
-                        lng: order.storeLocation.lng,
-                      },
-                      {
-                        lat: order.deliveryLocation.lat,
-                        lng: order.deliveryLocation.lng,
-                      },
-                    ]}
-                    strokeWeight={3}
-                    strokeColor="#4A90E2"
-                    strokeOpacity={0.6}
-                    strokeStyle="dash"
-                  />
-                )}
               </>
             )}
           </BasicMap>

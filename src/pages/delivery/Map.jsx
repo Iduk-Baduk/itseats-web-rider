@@ -94,10 +94,10 @@ export default function Map() {
               lng: location.longitude,
             }}
             image={{
-              src: "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png",
+              src: "http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png",
               size: {
-                width: 24,
-                height: 35,
+                width: 32,
+                height: 40,
               },
             }}
             title="현재 위치"
