@@ -5,7 +5,7 @@ import BasicMap from "../../components/common/BasicMap";
 import { MapMarker } from "react-kakao-maps-sdk";
 import React, { useEffect, useCallback, useRef } from "react";
 
-export default function Map() {
+export default function DeliveryMap() {
   const navigate = useNavigate();
   const refetchRef = useRef(null);
 
