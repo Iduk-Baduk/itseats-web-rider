@@ -1,4 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
+import useRealtimeMyLocation from "../../hooks/useRealtimeMyLocation"; // 추가
 import DeliveryHeader from "../../components/delivery/DeliveryHeader";
 import DeliveryRequest from "../../components/delivery/DeliveryRequest";
 import BasicMap from "../../components/common/BasicMap";
@@ -6,21 +7,34 @@ import { MapMarker, Polyline } from "react-kakao-maps-sdk";
 import styles from "./DeliveryInProgress.module.css";
 
 export default function DeliveryInProgress() {
-  const location = useLocation();
+  const routerLocation = useLocation();
   const navigate = useNavigate();
-  const { order, location: riderLocation } = location.state || {};
+  const { order } = routerLocation.state || {}; // location 제거
+  const { location: riderLocation, error: locationError } = useRealtimeMyLocation(); // 실시간 위치 훅 사용
 
   console.log("배달 진행 - 전달받은 주문 데이터:", order);
-  console.log("배달 진행 - 전달받은 위치 데이터:", riderLocation);
+  console.log("배달 진행 - 실시간 위치 데이터:", riderLocation);
   console.log("배달 진행 - 주문 메뉴 정보:", order?.orderItems || order?.menu);
   console.log("배달 진행 - 총 금액:", order?.totalPrice);
 
   // 사진 촬영 페이지로 이동
   const handlePhotoCapture = () => {
     navigate("/delivery/photo-confirm", {
-      state: { order, location: riderLocation },
+      state: { order, location: riderLocation }, // 최신 위치 전달
     });
   };
+
+  // 위치 에러 처리
+  if (locationError) {
+    return (
+      <div className={styles.wrapper}>
+        <div style={{ padding: "20px", textAlign: "center" }}>
+          <h2>위치 정보를 가져올 수 없습니다.</h2>
+          <p>오류: {locationError}</p>
+        </div>
+      </div>
+    );
+  }
 
   // 주문 데이터가 없을 경우 처리
   if (!order) {
@@ -46,8 +60,8 @@ export default function DeliveryInProgress() {
       {riderLocation && order && (
         <BasicMap
           center={{
-            lat: order.deliveryLocation?.lat || riderLocation.latitude,
-            lng: order.deliveryLocation?.lng || riderLocation.longitude,
+            lat: riderLocation.latitude,
+            lng: riderLocation.longitude,
           }}
           level={4}
           width="100%"

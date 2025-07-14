@@ -4,6 +4,7 @@ import apiClient from "../../services/apiClient";
 import { API_ENDPOINTS } from "../../config/api";
 import { calculateDistance } from "../../services/locationService";
 import useDetailOrder from "../../hooks/useDetailOrder";
+import useRealtimeMyLocation from "../../hooks/useRealtimeMyLocation"; // 추가
 import BasicMap from "../../components/common/BasicMap";
 import { MapMarker, Polyline } from "react-kakao-maps-sdk";
 import styles from "./GoToStore.module.css";
@@ -11,7 +12,8 @@ import styles from "./GoToStore.module.css";
 export default function GoToStore() {
   const routerLocation = useLocation();
   const navigate = useNavigate();
-  const { order, location: riderLocation } = routerLocation.state || {};
+  const { order } = routerLocation.state || {}; // location 제거
+  const { location: riderLocation, error: locationError } = useRealtimeMyLocation(); // 실시간 위치 훅 사용
   const [isLoading, setIsLoading] = useState(false);
 
   // 바텀 시트 드래그 상태
@@ -28,28 +30,29 @@ export default function GoToStore() {
   } = useDetailOrder(order?.orderId);
 
   console.log("전달받은 주문 데이터:", order);
-  console.log("전달받은 위치 데이터:", riderLocation);
+  console.log("실시간 위치 데이터:", riderLocation);
   console.log("주문 상세 조회 결과:", orderDetail);
 
   // 기본 order 데이터와 상세 조회 데이터를 병합
   const displayOrder = orderDetail ? { ...order, ...orderDetail } : order;
 
-  // 매장까지의 거리 계산
+  // 매장까지의 거리 계산 (실시간)
   const storeDistance = useMemo(() => {
     const orderData = displayOrder || order;
-    if (!orderData?.myLocation || !orderData?.storeLocation) {
+    // 실시간 라이더 위치와 매장 위치가 모두 있어야 계산
+    if (!riderLocation || !orderData?.storeLocation) {
       return null;
     }
 
     const distance = calculateDistance(
-      orderData.myLocation.lat,
-      orderData.myLocation.lng,
+      riderLocation.latitude,
+      riderLocation.longitude,
       orderData.storeLocation.lat,
       orderData.storeLocation.lng
     );
 
     return (distance / 1000).toFixed(1); // 미터를 킬로미터로 변환하고 소수점 1자리
-  }, [displayOrder, order]);
+  }, [displayOrder, order, riderLocation]); // riderLocation 의존성 추가
 
   // 드래그 시작
   const handleDragStart = (e) => {
@@ -114,7 +117,7 @@ export default function GoToStore() {
       navigate("/delivery/pickup", {
         state: {
           order: displayOrder, // 병합된 데이터 전달
-          location: riderLocation,
+          location: riderLocation, // 최신 위치 전달
         },
       });
     } catch (error) {
@@ -167,6 +170,18 @@ export default function GoToStore() {
       setIsLoading(false);
     }
   };
+
+  // 위치 에러 처리
+  if (locationError) {
+    return (
+      <div className={styles.wrapper}>
+        <div style={{ padding: "20px", textAlign: "center" }}>
+          <h2>위치 정보를 가져올 수 없습니다.</h2>
+          <p>오류: {locationError}</p>
+        </div>
+      </div>
+    );
+  }
 
   // 주문 데이터가 없을 경우 처리
   if (!order) {
@@ -361,7 +376,7 @@ export default function GoToStore() {
                 </div>
                 <div style={{ fontSize: "14px", color: "#333" }}>
                   <strong>매장까지 거리:</strong>{" "}
-                  {storeDistance ? `${storeDistance}km` : "정보 없음"}
+                  {storeDistance ? `${storeDistance}km` : "계산 중..."}
                 </div>
                 {orderDetail?.menu && (
                   <div style={{ marginTop: "8px", fontSize: "14px", color: "#333" }}>
