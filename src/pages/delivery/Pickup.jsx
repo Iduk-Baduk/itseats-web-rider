@@ -4,6 +4,8 @@ import apiClient from "../../services/apiClient";
 import { API_ENDPOINTS } from "../../config/api";
 import PickupOrderInfo from "../../components/delivery/PickupOrderInfo";
 import PickupActionSection from "../../components/delivery/PickupActionSection";
+import BasicMap from "../../components/common/BasicMap";
+import { MapMarker, Polyline } from "react-kakao-maps-sdk";
 import styles from "./Pickup.module.css";
 
 export default function Pickup() {
@@ -32,26 +34,26 @@ export default function Pickup() {
     console.log("📦 픽업 완료 처리 요청:", {
       orderId: order.orderId,
       orderNumber: order.orderNumber,
-      endpoint: API_ENDPOINTS.PICKUP_ORDER(order.orderId)
+      endpoint: API_ENDPOINTS.PICKUP_ORDER(order.orderId),
     });
 
     try {
       const response = await apiClient.put(API_ENDPOINTS.PICKUP_ORDER(order.orderId));
       console.log("📦 픽업 완료 처리 성공:", response.data);
       alert("픽업이 완료되었습니다!");
-      
+
       // 배달 진행 페이지로 이동
       navigate("/delivery/in-progress", {
-        state: { order: displayOrder, location: riderLocation }
+        state: { order: displayOrder, location: riderLocation },
       });
     } catch (error) {
       console.error("📦 픽업 완료 처리 실패:", error);
       console.error("📦 에러 상세:", {
         status: error.response?.status,
         message: error.response?.data?.message || error.message,
-        data: error.response?.data
+        data: error.response?.data,
       });
-      
+
       const errorMessage = error.response?.data?.message || "픽업 완료 처리에 실패했습니다.";
       alert(`픽업 실패: ${errorMessage}`);
     } finally {
@@ -71,12 +73,12 @@ export default function Pickup() {
       orderId: order.orderId,
       orderNumber: order.orderNumber,
       cancelReason,
-      endpoint: API_ENDPOINTS.REJECT_ORDER(order.orderId)
+      endpoint: API_ENDPOINTS.REJECT_ORDER(order.orderId),
     });
 
     try {
       const response = await apiClient.put(API_ENDPOINTS.REJECT_ORDER(order.orderId), {
-        rejectReason: cancelReason
+        rejectReason: cancelReason,
       });
       console.log("❌ 배차 취소 성공:", response.data);
       alert("주문이 취소되었습니다.");
@@ -86,9 +88,9 @@ export default function Pickup() {
       console.error("❌ 에러 상세:", {
         status: error.response?.status,
         message: error.response?.data?.message || error.message,
-        data: error.response?.data
+        data: error.response?.data,
       });
-      
+
       const errorMessage = error.response?.data?.message || "주문 취소에 실패했습니다.";
       alert(`취소 실패: ${errorMessage}`);
     } finally {
@@ -108,103 +110,258 @@ export default function Pickup() {
     );
   }
   return (
-    <div className={styles.wrapper}>
-      <div className={styles.mainCard}>
-        <PickupOrderInfo
-          service={displayOrder.storeName}
-          type="픽업"
-          address={displayOrder.storeAddress || displayOrder.address}
-          badge={`주문#${displayOrder?.orderNumber || displayOrder?.orderId || '알 수 없음'}`}
-          menu={displayOrder.orderItems ? 
-            displayOrder.orderItems.map(item => 
-              `${item.menuName} x ${item.quantity}${item.options ? ` (${item.options})` : ''}`
-            ).join(', ') : 
-            (displayOrder.menu ? 
-              displayOrder.menu.map(item => `${item.name} x ${item.quantity}`).join(', ') :
-              "주문 상세 정보"
-            )
-          }
-          price={`${displayOrder.totalPrice?.toLocaleString() || displayOrder.orderPrice?.toLocaleString() || '0'}원`}
-          detail={`배달비: ${displayOrder.deliveryFee?.toLocaleString() || '0'}원`}
-          totalPrice={`${((displayOrder.totalPrice || displayOrder.orderPrice || 0) + (displayOrder.deliveryFee || 0))?.toLocaleString()}원`}
-          request={displayOrder.storeRequest || displayOrder.riderRequest || "고객 요청사항 없음"}
-          storePhone={displayOrder.storePhone}
-          memberPhone={displayOrder.memberPhone}
-        />
-        <button className={styles.storeCallBtn}>
-          {displayOrder.storePhone ? `매장에 전화 (${displayOrder.storePhone})` : "매장에 전화"}
-        </button>
-        <div className={styles.cancelRow}>
-          <span className={styles.cancelLabel}>배정</span>
-          <button 
-            className={styles.cancelBtn}
-            onClick={handleCancelOrder}
-            disabled={isLoading}
-            style={{ opacity: isLoading ? 0.6 : 1, cursor: isLoading ? 'not-allowed' : 'pointer' }}
-          >
-            {isLoading ? "처리 중..." : "취소하기"}
-          </button>
+    <div
+      style={{
+        position: "relative",
+        width: "100%",
+        height: "100dvh", // 동적 뷰포트 높이 (웹앱 최적화)
+        overflow: "hidden",
+      }}
+    >
+      {/* 전체 화면 지도 */}
+      {riderLocation && displayOrder && (
+        <BasicMap
+          center={{
+            lat: displayOrder.deliveryLocation?.lat || riderLocation.latitude,
+            lng: displayOrder.deliveryLocation?.lng || riderLocation.longitude,
+          }}
+          level={4}
+          width="100%"
+          height="100%"
+          showControls={false}
+        >
+          {/* 라이더 현재 위치 마커 (매장 위치) */}
+          <MapMarker
+            position={{
+              lat: riderLocation.latitude,
+              lng: riderLocation.longitude,
+            }}
+            image={{
+              src: "http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png",
+              size: {
+                width: 32,
+                height: 40,
+              },
+            }}
+            title="현재 위치 (라이더)"
+          />
+
+          {/* 배달지 위치 마커 */}
+          {displayOrder.destination && (
+            <>
+              <MapMarker
+                position={{
+                  lat: displayOrder.destination.lat,
+                  lng: displayOrder.destination.lng,
+                }}
+                image={{
+                  src: "https://t1.daumcdn.net/localimg/localimages/07/2018/pc/img/marker_spot.png",
+                  size: {
+                    width: 28,
+                    height: 40,
+                  },
+                }}
+                title={`배달지 (목적지)`}
+              />
+
+              {/* 라이더에서 배달지까지의 경로선 */}
+              <Polyline
+                path={[
+                  {
+                    lat: riderLocation.latitude,
+                    lng: riderLocation.longitude,
+                  },
+                  {
+                    lat: displayOrder.destination.lat,
+                    lng: displayOrder.destination.lng,
+                  },
+                ]}
+                strokeWeight={3}
+                strokeColor="#4A90E2"
+                strokeOpacity={0.8}
+                strokeStyle="shortdash"
+              />
+            </>
+          )}
+        </BasicMap>
+      )}
+
+      {/* 위치 정보가 없을 때 fallback */}
+      {(!riderLocation || !displayOrder) && (
+        <div
+          style={{
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            background: "#f5f5f5",
+            color: "#666",
+          }}
+        >
+          지도를 불러오는 중...
         </div>
-        
-        {/* 주문 상세 정보 표시 */}
-        {(displayOrder.orderItems || displayOrder.menu) && (
-          <div style={{ 
-            margin: "16px 20px", 
-            padding: "12px", 
-            background: "#f8f9fa", 
-            borderRadius: "8px",
-            border: "1px solid #e9ecef"
-          }}>
-            <h4 style={{ margin: "0 0 8px 0", fontSize: "14px", fontWeight: "bold" }}>📋 주문 상세</h4>
-            
-            {/* orderItems 우선 표시 (GoToStore에서 받은 상세 데이터) */}
-            {displayOrder.orderItems ? (
-              displayOrder.orderItems.map((item, index) => (
-                <div key={index} style={{ marginBottom: "4px", fontSize: "13px" }}>
-                  • {item.menuName} x {item.quantity} - {item.menuPrice?.toLocaleString()}원
-                  {item.options && <div style={{ color: "#666", fontSize: "12px", marginLeft: "8px" }}>옵션: {item.options}</div>}
-                </div>
-              ))
-            ) : (
-              /* menu가 있는 경우 (Mock 서버 데이터) */
-              displayOrder.menu && displayOrder.menu.map((item, index) => (
-                <div key={index} style={{ marginBottom: "4px", fontSize: "13px" }}>
-                  • {item.name} x {item.quantity}
-                </div>
-              ))
-            )}
-            
-            <hr style={{ margin: "8px 0", border: "none", borderTop: "1px solid #ddd" }} />
-            <div style={{ fontSize: "13px", color: "#333" }}>
-              <div>📞 매장: {displayOrder.storePhone || '정보 없음'}</div>
-              <div>📱 고객: {displayOrder.memberPhone || '정보 없음'}</div>
-              {displayOrder.storeRequest && <div>🏪 매장 요청: {displayOrder.storeRequest}</div>}
-              {displayOrder.riderRequest && <div>🚚 배달 요청: {displayOrder.riderRequest}</div>}
-              {displayOrder.orderStatus && <div>📋 주문 상태: {displayOrder.orderStatus}</div>}
-              {displayOrder.orderTime && <div>🕐 주문 시간: {new Date(displayOrder.orderTime).toLocaleString()}</div>}
-            </div>
-          </div>
-        )}
-        
-        <div style={{ padding: "0 20px" }}>
-          <button 
-            onClick={handlePickupComplete}
-            disabled={isLoading}
-            style={{ 
-              width: "100%",
-              background: "#178351",
-              color: "#fff",
-              border: "none",
-              borderRadius: "8px",
-              fontSize: "18px",
-              fontWeight: "bold",
-              padding: "16px 0",
-              cursor: isLoading ? "not-allowed" : "pointer",
-              opacity: isLoading ? 0.6 : 1
+      )}
+
+      {/* 픽업 정보 바텀 시트 */}
+      <div
+        style={{
+          position: "absolute",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          height: "60%",
+          background: "white",
+          borderRadius: "20px 20px 0 0",
+          boxShadow: "0 -4px 20px rgba(0, 0, 0, 0.15)",
+          zIndex: 1000,
+          overflow: "hidden",
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        {/* 핸들 */}
+        <div
+          style={{
+            padding: "15px 0",
+            textAlign: "center",
+            borderBottom: "1px solid #f0f0f0",
+            background: "white",
+            flexShrink: 0,
+          }}
+        >
+          <div
+            style={{
+              width: "40px",
+              height: "4px",
+              background: "#ccc",
+              borderRadius: "2px",
+              margin: "0 auto",
+            }}
+          />
+        </div>
+
+        {/* 스크롤 가능한 컨텐츠 */}
+        <div
+          style={{
+            flex: 1,
+            overflowY: "auto",
+            padding: "20px 20px calc(20px + env(safe-area-inset-bottom, 0px)) 20px",
+          }}
+        >
+          <div
+            style={{
+              background: "transparent",
+              boxShadow: "none",
+              margin: 0,
+              padding: 0,
+              height: "auto",
             }}
           >
-            {isLoading ? "처리 중..." : "픽업 완료"}
-          </button>
+            <PickupOrderInfo
+              service={displayOrder.storeName}
+              type="픽업"
+              address={displayOrder.storeAddress || displayOrder.address}
+              badge={`주문#${displayOrder?.orderNumber || displayOrder?.orderId || "알 수 없음"}`}
+              menu={
+                displayOrder.orderItems
+                  ? displayOrder.orderItems
+                      .map(
+                        (item) =>
+                          `${item.menuName} x ${item.quantity}${
+                            item.options ? ` (${item.options})` : ""
+                          }`
+                      )
+                      .join(", ")
+                  : displayOrder.menu
+                  ? displayOrder.menu.map((item) => `${item.name} x ${item.quantity}`).join(", ")
+                  : "주문 상세 정보"
+              }
+              price={`${
+                displayOrder.totalPrice?.toLocaleString() ||
+                displayOrder.orderPrice?.toLocaleString() ||
+                "0"
+              }원`}
+              detail={`배달비: ${displayOrder.deliveryFee?.toLocaleString() || "0"}원`}
+              totalPrice={`${(
+                (displayOrder.totalPrice || displayOrder.orderPrice || 0) +
+                (displayOrder.deliveryFee || 0)
+              )?.toLocaleString()}원`}
+              request={
+                displayOrder.storeRequest || displayOrder.riderRequest || "고객 요청사항 없음"
+              }
+              storePhone={displayOrder.storePhone}
+              memberPhone={displayOrder.memberPhone}
+            />
+            <button className={styles.storeCallBtn}>
+              {displayOrder.storePhone ? `매장에 전화 (${displayOrder.storePhone})` : "매장에 전화"}
+            </button>
+            <div className={styles.cancelRow}>
+              <span className={styles.cancelLabel}>배정</span>
+              <button
+                className={styles.cancelBtn}
+                onClick={handleCancelOrder}
+                disabled={isLoading}
+                style={{
+                  opacity: isLoading ? 0.6 : 1,
+                  cursor: isLoading ? "not-allowed" : "pointer",
+                }}
+              >
+                {isLoading ? "처리 중..." : "취소하기"}
+              </button>
+            </div>
+
+            {/* 추가 주문 정보 */}
+            {displayOrder && (
+              <div
+                style={{
+                  marginTop: "16px",
+                  padding: "12px",
+                  background: "#f8f9fa",
+                  borderRadius: "8px",
+                  border: "1px solid #e9ecef",
+                }}
+              >
+                <div style={{ fontSize: "13px", color: "#333" }}>
+                  <div>📞 매장: {displayOrder.storePhone || "정보 없음"}</div>
+                  <div>📱 고객: {displayOrder.memberPhone || "정보 없음"}</div>
+                  {displayOrder.storeRequest && (
+                    <div>🏪 매장 요청: {displayOrder.storeRequest}</div>
+                  )}
+                  {displayOrder.riderRequest && (
+                    <div>🚚 배달 요청: {displayOrder.riderRequest}</div>
+                  )}
+                  {displayOrder.orderStatus && <div>📋 주문 상태: {displayOrder.orderStatus}</div>}
+                  {displayOrder.orderTime && (
+                    <div>🕐 주문 시간: {new Date(displayOrder.orderTime).toLocaleString()}</div>
+                  )}
+                  {displayOrder.deliveryLocation && (
+                    <div>🏠 배달 주소: {displayOrder.deliveryAddress || "주소 정보 없음"}</div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            <button
+              onClick={handlePickupComplete}
+              disabled={isLoading}
+              style={{
+                width: "100%",
+                background: "#178351",
+                color: "#fff",
+                border: "none",
+                borderRadius: "8px",
+                fontSize: "18px",
+                fontWeight: "bold",
+                padding: "16px 0",
+                cursor: isLoading ? "not-allowed" : "pointer",
+                opacity: isLoading ? 0.6 : 1,
+                marginTop: "16px",
+              }}
+            >
+              {isLoading ? "처리 중..." : "픽업 완료"}
+            </button>
+          </div>
         </div>
       </div>
     </div>
