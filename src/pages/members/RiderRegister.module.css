@@ -13,19 +13,21 @@
     margin-bottom: 36px;
 }
 
-.textInput {
+.row {
+    margin-bottom: 24px;
+}
+.row>h2 {
+    font-size: 18px;
+    font-weight: 700;
     margin-bottom: 12px;
 }
-.checkbox {
-    margin: 12px 0 24px;
-}
-.button {
-    width: 100%;
+.row>h3 {
+    font-size: 16px;
+    margin-top: 18px;
+    margin-bottom: 8px;
 }
 
-.error {
-    color: red;
-    font-size: 16px;
-    margin-bottom: 24px;
-    text-align: center;
+.button {
+    margin-top: 24px;
+    width: 100%;
 }
