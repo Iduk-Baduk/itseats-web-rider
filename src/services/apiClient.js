@@ -20,7 +20,8 @@ apiClient.interceptors.request.use(
       // localStorage에서 토큰 가져오기
       const token = localStorage.getItem("token");
       if (token) {
-        config.headers["Authorization"] = `Bearer ${token}`;
+        // 표준 Authorization 헤더도 함께 전송
+        config.headers.Authorization = `Bearer ${token}`;
       } else {
         // 토큰이 없으면 로그인 페이지로 리다이렉트
         window.location.href = "/login";

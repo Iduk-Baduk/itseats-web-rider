@@ -19,4 +19,7 @@ export const API_ENDPOINTS = {
   COMPLETE_ORDER: (orderId) => `/rider/${orderId}/done`,
   UPLOAD_PHOTO: (orderId) => `/rider/${orderId}/picture`,
   WORKING_STATUS: () => "/rider/working",
+  
+  // 라이더 위치 관련
+  UPDATE_LOCATION: () => "/rider/location",
 };

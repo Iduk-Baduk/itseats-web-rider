@@ -1,19 +1,51 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import apiClient from "../../services/apiClient";
 import { API_ENDPOINTS } from "../../config/api";
+import { calculateDistance } from "../../services/locationService";
 import DeliveryMap from "../../components/delivery/DeliveryMap";
 import styles from "./CallIncoming.module.css";
 
 export default function CallIncoming() {
-  const location = useLocation();
+  const routerLocation = useLocation();
   const navigate = useNavigate();
-  const { order, location: riderLocation } = location.state || {};
+  const { order, location: riderLocation } = routerLocation.state || {}; // routerLocation에서 상태 가져오기
+
   const [isLoading, setIsLoading] = useState(false);
   const [timeLeft, setTimeLeft] = useState(60);
 
-  console.log("전달받은 주문 데이터:", order);
-  console.log("전달받은 위치 데이터:", riderLocation);
+  // 배달 거리 계산 (킬로미터 단위)
+  const deliveryDistance = useMemo(() => {
+    if (!order?.myLocation || !order?.storeLocation) {
+      return null;
+    }
+
+    const distanceInMeters = calculateDistance(
+      order.myLocation.lat,
+      order.myLocation.lng,
+      order.storeLocation.lat,
+      order.storeLocation.lng
+    );
+
+    // 미터를 킬로미터로 변환하고 소수점 1자리까지 표시
+    const distanceInKm = (distanceInMeters / 1000).toFixed(1);
+    
+    console.log("📏 배달 거리 계산:", {
+      myLocation: order.myLocation,
+      storeLocation: order.storeLocation,
+      distanceInMeters,
+      distanceInKm
+    });
+
+    return distanceInKm;
+  }, [order]);
+
+  // 디버깅 로그 (한 번만 실행)
+  useEffect(() => {
+    console.log("전달받은 주문 데이터:", order);
+    console.log("전달받은 위치 데이터:", riderLocation);
+    console.log("계산된 배달거리:", deliveryDistance, "km");
+  }, [order, riderLocation, deliveryDistance]); // 이 값들이 변경될 때만 실행
 
   // 타이머 기능
   useEffect(() => {
@@ -31,21 +63,39 @@ export default function CallIncoming() {
 
   // 주문 거절 처리
   const handleRejectOrder = async () => {
-    if (!order?.orderId) return;
+    if (!order?.orderId) {
+      alert("주문 정보가 없습니다.");
+      return;
+    }
 
     const rejectReason = prompt("거절 사유를 입력해주세요:");
     if (!rejectReason) return;
 
     setIsLoading(true);
+    console.log("🚫 주문 거절 요청:", {
+      orderId: order.orderId,
+      rejectReason,
+      endpoint: API_ENDPOINTS.REJECT_ORDER(order.orderId),
+    });
+
     try {
-      await apiClient.put(API_ENDPOINTS.REJECT_ORDER(order.orderId), {
+      const response = await apiClient.put(API_ENDPOINTS.REJECT_ORDER(order.orderId), {
         rejectReason,
       });
+
+      console.log("🚫 주문 거절 성공:", response.data);
       alert("주문이 거절되었습니다.");
       navigate("/delivery"); // 메인 페이지로 돌아가기
     } catch (error) {
-      console.error("주문 거절 실패:", error);
-      alert("주문 거절에 실패했습니다. 다시 시도해주세요.");
+      console.error("🚫 주문 거절 실패:", error);
+      console.error("🚫 에러 상세:", {
+        status: error.response?.status,
+        message: error.response?.data?.message || error.message,
+        data: error.response?.data,
+      });
+
+      const errorMessage = error.response?.data?.message || "주문 거절에 실패했습니다.";
+      alert(`거절 실패: ${errorMessage}`);
     } finally {
       setIsLoading(false);
     }
@@ -53,19 +103,42 @@ export default function CallIncoming() {
 
   // 주문 수락 처리
   const handleAcceptOrder = async () => {
-    if (!order?.orderId) return;
+    if (!order?.orderId) {
+      alert("주문 정보가 없습니다.");
+      return;
+    }
 
     setIsLoading(true);
+    console.log("✅ 주문 수락 요청:", {
+      orderId: order.orderId,
+      endpoint: API_ENDPOINTS.ACCEPT_ORDER(order.orderId),
+    });
+
     try {
-      await apiClient.put(API_ENDPOINTS.ACCEPT_ORDER(order.orderId));
+      const response = await apiClient.put(API_ENDPOINTS.ACCEPT_ORDER(order.orderId));
+
+      console.log("✅ 주문 수락 성공:", response.data);
       alert("주문이 수락되었습니다!");
-      // 매장으로 이동하는 페이지로 이동
+
+      // 매장으로 이동하는 페이지로 이동 (계산된 거리 정보 추가)
+      const orderWithDistance = {
+        ...order,
+        distance: deliveryDistance
+      };
+      
       navigate("/delivery/go-to-store", {
-        state: { order, location: riderLocation },
+        state: { order: orderWithDistance, location: riderLocation },
       });
     } catch (error) {
-      console.error("주문 수락 실패:", error);
-      alert("주문 수락에 실패했습니다. 다시 시도해주세요.");
+      console.error("✅ 주문 수락 실패:", error);
+      console.error("✅ 에러 상세:", {
+        status: error.response?.status,
+        message: error.response?.data?.message || error.message,
+        data: error.response?.data,
+      });
+
+      const errorMessage = error.response?.data?.message || "주문 수락에 실패했습니다.";
+      alert(`수락 실패: ${errorMessage}`);
     } finally {
       setIsLoading(false);
     }
@@ -98,24 +171,12 @@ export default function CallIncoming() {
         </div>
         <div className={styles.price}>{order.deliveryFee?.toLocaleString()}원</div>
         <div className={styles.detailRow}>
-          <span className={styles.distance}>배달거리 {order.distance}km (실제 경로)</span>
+          <span className={styles.distance}>
+            배달거리 {deliveryDistance ? `${deliveryDistance}km` : '계산 중...'}
+          </span>
           <span className={styles.infoIcon}>ⓘ</span>
         </div>
         <div className={styles.detailRowSub}>거리/배달팁·지급금 포함</div>
-        <div className={styles.orderInfo}>
-          <div>
-            <strong>주문 번호:</strong> {order.orderId}
-          </div>
-          <div>
-            <strong>주문 금액:</strong> {order.orderPrice?.toLocaleString()}원
-          </div>
-          <div>
-            <strong>배달 주소:</strong> {order.address}
-          </div>
-          <div>
-            <strong>주문 상태:</strong> {order.orderStatus}
-          </div>
-        </div>
         <div className={styles.desc}>
           * 일부 매장의 조리완료 시간은 과거 배달 기록으로 계산됩니다.
         </div>

@@ -10,11 +10,13 @@ export default function DeliveryInProgress() {
 
   console.log("배달 진행 - 전달받은 주문 데이터:", order);
   console.log("배달 진행 - 전달받은 위치 데이터:", riderLocation);
+  console.log("배달 진행 - 주문 메뉴 정보:", order?.orderItems || order?.menu);
+  console.log("배달 진행 - 총 금액:", order?.totalPrice);
 
   // 사진 촬영 페이지로 이동
   const handlePhotoCapture = () => {
     navigate("/delivery/photo-confirm", {
-      state: { order, location: riderLocation }
+      state: { order, location: riderLocation },
     });
   };
 
@@ -34,25 +36,72 @@ export default function DeliveryInProgress() {
       <div className={styles.mainCard}>
         <DeliveryHeader
           service={`${order.storeName} 배달`}
-          address={order.address}
-          orderCode={`주문#${order.orderId}`}
+          address={order.customerAddress || order.address || order.storeAddress}
+          orderCode={`주문#${order.orderNumber || order.orderId}`}
         />
 
         <DeliveryRequest
-          request="고객 요청사항: 문고리에 걸어 두시고 문자 주세요! 벨은 누르지 말아주세요."
+          request={
+            order.customerRequest ||
+            order.request ||
+            "고객 요청사항: 문고리에 걸어 두시고 문자 주세요! 벨은 누르지 말아주세요."
+          }
         />
 
         <div className={styles.menuSection}>
-          <div className={styles.orderCode}>주문#{order.orderId}</div>
-          <div className={styles.menuRow}>
-            <span>주문 상세 메뉴</span>
-            <span className={styles.menuPrice}>{order.orderPrice?.toLocaleString()}원</span>
+          <div className={styles.orderCode}>주문</div>
+          <div className={styles.menuTitle}>주문 상세 메뉴</div>
+
+          {/* 주문 메뉴 목록 표시 */}
+          {order.orderItems && order.orderItems.length > 0 ? (
+            order.orderItems.map((item, index) => (
+              <div key={index} className={styles.menuItem}>
+                <div className={styles.menuRow}>
+                  <span className={styles.menuName}>
+                    {item.menuName} x {item.quantity}
+                  </span>
+                  <span className={styles.menuPrice}>
+                    {(item.totalPrice || item.menuPrice)?.toLocaleString()}원
+                  </span>
+                </div>
+                {item.options && <div className={styles.menuOption}>옵션: {item.options}</div>}
+              </div>
+            ))
+          ) : order.menu && order.menu.length > 0 ? (
+            order.menu.map((item, index) => (
+              <div key={index} className={styles.menuItem}>
+                <div className={styles.menuRow}>
+                  <span className={styles.menuName}>
+                    {item.menuName} x {item.quantity}
+                  </span>
+                  <span className={styles.menuPrice}>
+                    {(item.totalPrice || item.menuPrice)?.toLocaleString()}원
+                  </span>
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className={styles.menuRow}>
+              <span>주문 메뉴 정보</span>
+              <span className={styles.menuPrice}>{order.orderPrice?.toLocaleString()}원</span>
+            </div>
+          )}
+
+          <div className={styles.priceSection}>
+            <div className={styles.menuDetail}>배달비: {order.deliveryFee?.toLocaleString()}원</div>
+            <div className={styles.totalRow}>
+              <span className={styles.totalLabel}>총 주문금액</span>
+              <span className={styles.totalPrice}>
+                {order.totalPrice
+                  ? order.totalPrice.toLocaleString()
+                  : order.orderPrice && order.deliveryFee
+                  ? (order.orderPrice + order.deliveryFee).toLocaleString()
+                  : "N/A"}
+                원
+              </span>
+            </div>
           </div>
-          <div className={styles.menuDetail}>배달비: {order.deliveryFee?.toLocaleString()}원</div>
-          <div className={styles.menuRow}>
-            <span className={styles.menuLabel}>총 주문금액</span>
-            <span className={styles.menuPrice}>{(order.orderPrice + order.deliveryFee)?.toLocaleString()}원</span>
-          </div>
+
           <div className={styles.menuNotice}>
             고객 계좌정보가 보이면 노출되지 않도록 유의해주세요.
           </div>
@@ -66,17 +115,15 @@ export default function DeliveryInProgress() {
         <div className={styles.photoGuide}>
           <span className={styles.photoIcon}>📷</span>
           <span>
-            배달 완료 후 인증 사진을 꼭 찍어주세요<br />
+            배달 완료 후 인증 사진을 꼭 찍어주세요
+            <br />
             <span className={styles.photoGuideSub}>
               (다만 계좌번호 등 개인정보가 사진에 노출되지 않도록 유의)
             </span>
           </span>
         </div>
 
-        <button 
-          className={styles.photoBtn}
-          onClick={handlePhotoCapture}
-        >
+        <button className={styles.photoBtn} onClick={handlePhotoCapture}>
           배달상태 촬영
         </button>
 
