@@ -34,26 +34,26 @@ export default function Pickup() {
     console.log("📦 픽업 완료 처리 요청:", {
       orderId: order.orderId,
       orderNumber: order.orderNumber,
-      endpoint: API_ENDPOINTS.PICKUP_ORDER(order.orderId)
+      endpoint: API_ENDPOINTS.PICKUP_ORDER(order.orderId),
     });
 
     try {
       const response = await apiClient.put(API_ENDPOINTS.PICKUP_ORDER(order.orderId));
       console.log("📦 픽업 완료 처리 성공:", response.data);
       alert("픽업이 완료되었습니다!");
-      
+
       // 배달 진행 페이지로 이동
       navigate("/delivery/in-progress", {
-        state: { order: displayOrder, location: riderLocation }
+        state: { order: displayOrder, location: riderLocation },
       });
     } catch (error) {
       console.error("📦 픽업 완료 처리 실패:", error);
       console.error("📦 에러 상세:", {
         status: error.response?.status,
         message: error.response?.data?.message || error.message,
-        data: error.response?.data
+        data: error.response?.data,
       });
-      
+
       const errorMessage = error.response?.data?.message || "픽업 완료 처리에 실패했습니다.";
       alert(`픽업 실패: ${errorMessage}`);
     } finally {
@@ -73,12 +73,12 @@ export default function Pickup() {
       orderId: order.orderId,
       orderNumber: order.orderNumber,
       cancelReason,
-      endpoint: API_ENDPOINTS.REJECT_ORDER(order.orderId)
+      endpoint: API_ENDPOINTS.REJECT_ORDER(order.orderId),
     });
 
     try {
       const response = await apiClient.put(API_ENDPOINTS.REJECT_ORDER(order.orderId), {
-        rejectReason: cancelReason
+        rejectReason: cancelReason,
       });
       console.log("❌ 배차 취소 성공:", response.data);
       alert("주문이 취소되었습니다.");
@@ -88,9 +88,9 @@ export default function Pickup() {
       console.error("❌ 에러 상세:", {
         status: error.response?.status,
         message: error.response?.data?.message || error.message,
-        data: error.response?.data
+        data: error.response?.data,
       });
-      
+
       const errorMessage = error.response?.data?.message || "주문 취소에 실패했습니다.";
       alert(`취소 실패: ${errorMessage}`);
     } finally {
@@ -138,27 +138,27 @@ export default function Pickup() {
               lng: riderLocation.longitude,
             }}
             image={{
-              src: "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png",
+              src: "http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png",
               size: {
-                width: 24,
-                height: 35,
+                width: 32,
+                height: 40,
               },
             }}
             title="현재 위치 (라이더)"
           />
 
           {/* 배달지 위치 마커 */}
-          {displayOrder.deliveryLocation && (
+          {displayOrder.destination && (
             <>
               <MapMarker
                 position={{
-                  lat: displayOrder.deliveryLocation.lat,
-                  lng: displayOrder.deliveryLocation.lng,
+                  lat: displayOrder.destination.lat,
+                  lng: displayOrder.destination.lng,
                 }}
                 image={{
-                  src: "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_blue.png",
+                  src: "https://t1.daumcdn.net/localimg/localimages/07/2018/pc/img/marker_spot.png",
                   size: {
-                    width: 32,
+                    width: 28,
                     height: 40,
                   },
                 }}
@@ -173,14 +173,14 @@ export default function Pickup() {
                     lng: riderLocation.longitude,
                   },
                   {
-                    lat: displayOrder.deliveryLocation.lat,
-                    lng: displayOrder.deliveryLocation.lng,
+                    lat: displayOrder.destination.lat,
+                    lng: displayOrder.destination.lng,
                   },
                 ]}
                 strokeWeight={3}
                 strokeColor="#4A90E2"
                 strokeOpacity={0.8}
-                strokeStyle="dash"
+                strokeStyle="shortdash"
               />
             </>
           )}
@@ -263,20 +263,34 @@ export default function Pickup() {
               service={displayOrder.storeName}
               type="픽업"
               address={displayOrder.storeAddress || displayOrder.address}
-              badge={`주문#${displayOrder?.orderNumber || displayOrder?.orderId || '알 수 없음'}`}
-              menu={displayOrder.orderItems ? 
-                displayOrder.orderItems.map(item => 
-                  `${item.menuName} x ${item.quantity}${item.options ? ` (${item.options})` : ''}`
-                ).join(', ') : 
-                (displayOrder.menu ? 
-                  displayOrder.menu.map(item => `${item.name} x ${item.quantity}`).join(', ') :
-                  "주문 상세 정보"
-                )
+              badge={`주문#${displayOrder?.orderNumber || displayOrder?.orderId || "알 수 없음"}`}
+              menu={
+                displayOrder.orderItems
+                  ? displayOrder.orderItems
+                      .map(
+                        (item) =>
+                          `${item.menuName} x ${item.quantity}${
+                            item.options ? ` (${item.options})` : ""
+                          }`
+                      )
+                      .join(", ")
+                  : displayOrder.menu
+                  ? displayOrder.menu.map((item) => `${item.name} x ${item.quantity}`).join(", ")
+                  : "주문 상세 정보"
               }
-              price={`${displayOrder.totalPrice?.toLocaleString() || displayOrder.orderPrice?.toLocaleString() || '0'}원`}
-              detail={`배달비: ${displayOrder.deliveryFee?.toLocaleString() || '0'}원`}
-              totalPrice={`${((displayOrder.totalPrice || displayOrder.orderPrice || 0) + (displayOrder.deliveryFee || 0))?.toLocaleString()}원`}
-              request={displayOrder.storeRequest || displayOrder.riderRequest || "고객 요청사항 없음"}
+              price={`${
+                displayOrder.totalPrice?.toLocaleString() ||
+                displayOrder.orderPrice?.toLocaleString() ||
+                "0"
+              }원`}
+              detail={`배달비: ${displayOrder.deliveryFee?.toLocaleString() || "0"}원`}
+              totalPrice={`${(
+                (displayOrder.totalPrice || displayOrder.orderPrice || 0) +
+                (displayOrder.deliveryFee || 0)
+              )?.toLocaleString()}원`}
+              request={
+                displayOrder.storeRequest || displayOrder.riderRequest || "고객 요청사항 없음"
+              }
               storePhone={displayOrder.storePhone}
               memberPhone={displayOrder.memberPhone}
             />
@@ -285,7 +299,7 @@ export default function Pickup() {
             </button>
             <div className={styles.cancelRow}>
               <span className={styles.cancelLabel}>배정</span>
-              <button 
+              <button
                 className={styles.cancelBtn}
                 onClick={handleCancelOrder}
                 disabled={isLoading}
@@ -297,34 +311,42 @@ export default function Pickup() {
                 {isLoading ? "처리 중..." : "취소하기"}
               </button>
             </div>
-            
+
             {/* 추가 주문 정보 */}
             {displayOrder && (
-              <div style={{
-                marginTop: "16px",
-                padding: "12px",
-                background: "#f8f9fa",
-                borderRadius: "8px",
-                border: "1px solid #e9ecef"
-              }}>
+              <div
+                style={{
+                  marginTop: "16px",
+                  padding: "12px",
+                  background: "#f8f9fa",
+                  borderRadius: "8px",
+                  border: "1px solid #e9ecef",
+                }}
+              >
                 <div style={{ fontSize: "13px", color: "#333" }}>
-                  <div>📞 매장: {displayOrder.storePhone || '정보 없음'}</div>
-                  <div>📱 고객: {displayOrder.memberPhone || '정보 없음'}</div>
-                  {displayOrder.storeRequest && <div>🏪 매장 요청: {displayOrder.storeRequest}</div>}
-                  {displayOrder.riderRequest && <div>🚚 배달 요청: {displayOrder.riderRequest}</div>}
+                  <div>📞 매장: {displayOrder.storePhone || "정보 없음"}</div>
+                  <div>📱 고객: {displayOrder.memberPhone || "정보 없음"}</div>
+                  {displayOrder.storeRequest && (
+                    <div>🏪 매장 요청: {displayOrder.storeRequest}</div>
+                  )}
+                  {displayOrder.riderRequest && (
+                    <div>🚚 배달 요청: {displayOrder.riderRequest}</div>
+                  )}
                   {displayOrder.orderStatus && <div>📋 주문 상태: {displayOrder.orderStatus}</div>}
-                  {displayOrder.orderTime && <div>🕐 주문 시간: {new Date(displayOrder.orderTime).toLocaleString()}</div>}
+                  {displayOrder.orderTime && (
+                    <div>🕐 주문 시간: {new Date(displayOrder.orderTime).toLocaleString()}</div>
+                  )}
                   {displayOrder.deliveryLocation && (
                     <div>🏠 배달 주소: {displayOrder.deliveryAddress || "주소 정보 없음"}</div>
                   )}
                 </div>
               </div>
             )}
-            
-            <button 
+
+            <button
               onClick={handlePickupComplete}
               disabled={isLoading}
-              style={{ 
+              style={{
                 width: "100%",
                 background: "#178351",
                 color: "#fff",
@@ -335,7 +357,7 @@ export default function Pickup() {
                 padding: "16px 0",
                 cursor: isLoading ? "not-allowed" : "pointer",
                 opacity: isLoading ? 0.6 : 1,
-                marginTop: "16px"
+                marginTop: "16px",
               }}
             >
               {isLoading ? "처리 중..." : "픽업 완료"}
