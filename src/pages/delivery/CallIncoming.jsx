@@ -178,7 +178,7 @@ export default function CallIncoming() {
                 lng: riderLocation.longitude,
               }}
               image={{
-                src: "/images/landing/riderMarker.png",
+                src: "http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png",
                 size: {
                   width: 25,
                   height: 25,
