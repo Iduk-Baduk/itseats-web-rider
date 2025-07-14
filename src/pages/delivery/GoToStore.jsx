@@ -239,7 +239,7 @@ export default function GoToStore() {
               <Polyline
                 path={[
                   {
-                    lat: riderLocation.latitude,ㅇ
+                    lat: riderLocation.latitude,
                     lng: riderLocation.longitude,
                   },
                   {
