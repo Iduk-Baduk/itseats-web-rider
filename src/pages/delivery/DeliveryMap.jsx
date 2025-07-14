@@ -1,13 +1,14 @@
 import { Link, useNavigate } from "react-router-dom";
 import useMyLocation from "../../hooks/useMyLocation";
 import useFetchOrders from "../../hooks/useFetchOrders";
-import { i } from "motion/react-client";
+import BasicMap from "../../components/common/BasicMap";
+import { MapMarker } from "react-kakao-maps-sdk";
 import React, { useEffect, useCallback, useRef } from "react";
 
-export default function Map() {
+export default function DeliveryMap() {
   const navigate = useNavigate();
   const refetchRef = useRef(null);
-  
+
   // 위치 업데이트 후 주문 목록 새로고침을 위한 콜백
   const handleLocationUpdate = useCallback((newLocation) => {
     console.log("📍 위치 업데이트 완료 - 주문 목록 즉시 새로고침:", newLocation);
@@ -16,10 +17,10 @@ export default function Map() {
       refetchRef.current();
     }
   }, []);
-  
+
   const { error, location } = useMyLocation(handleLocationUpdate); // 위치 업데이트 콜백 전달
   const { orders, loading, apiError, refetch } = useFetchOrders(location); // 위치를 기반으로 주문을 가져옵니다.
-  
+
   // refetch 함수를 ref에 저장
   useEffect(() => {
     refetchRef.current = refetch;
@@ -57,10 +58,6 @@ export default function Map() {
   if (apiError) {
     return <div>주문을 불러오는 중 오류 발생: {apiError}</div>;
   }
-  if (!orders || orders.length === 0) {
-    console.log("🔍 주문이 없어서 대기 중:", { orders, ordersLength: orders?.length });
-    return <div>현재 배달 가능한 주문이 없습니다.</div>;
-  }
 
   console.log("📍 현재 위치:", location);
   console.log("📦 주문 목록:", orders);
@@ -68,52 +65,45 @@ export default function Map() {
   return (
     <div
       style={{
-        display: "flex",
-        alignItems: "center",
+        position: "relative",
+        width: "100vw",
         height: "100vh",
-        flexDirection: "column",
-        gap: "20px",
-        overflowY: "auto",
+        overflow: "hidden",
       }}
     >
-      <h1>배달 조회 페이지</h1>
-      <div style={{ padding: "20px" }}>
-        <h1>가까운 배달 목록</h1>
-        {orders && orders.length > 0 ? (
-          <div>
-            {orders.map((order, index) => (
-              <div
-                key={index}
-                style={{
-                  border: "1px solid #ccc",
-                  borderRadius: "8px",
-                  padding: "16px",
-                  marginBottom: "16px",
-                }}
-              >
-                <h3 style={{ marginTop: 0 }}>{order.storeName}</h3>
-                <p>
-                  <strong>주소:</strong> {order.deliveryAddress}
-                </p>
-                <p>
-                  <strong>거리:</strong> {order.deliveryDistance}km
-                </p>
-                <p>
-                  <strong>배달비:</strong> {order.deliveryFee.toLocaleString()}원
-                </p>
-              </div>
-            ))}
-          </div>
-        ) : (
-          // 데이터가 없을 때 표시할 메시지
-          <p>주변에 배달 가능한 주문이 없습니다.</p>
-        )}
-      </div>
-      <h1>메인 페이지 (지도 및 배달)</h1>
-      <Link to="/mypage">마이페이지</Link>
-      <Link to="/delivery/1">배달(콜) 페이지</Link>
-      <Link to="/login">로그인으로 돌아가기</Link>
-      <Link to="/temp">공용 컴포넌트 갤러리</Link>
+      {/* 전체 화면 지도 */}
+      {location && (
+        <BasicMap
+          center={{
+            lat: location.latitude,
+            lng: location.longitude,
+          }}
+          level={3}
+          width="100%"
+          height="100%"
+          showControls={true}
+          loading={loading}
+          onCenterChanged={(newCenter) => {
+            console.log("🗺️ 지도 중심 변경:", newCenter);
+          }}
+        >
+          {/* 현재 위치 마커 */}
+          <MapMarker
+            position={{
+              lat: location.latitude,
+              lng: location.longitude,
+            }}
+            image={{
+              src: "http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png",
+              size: {
+                width: 32,
+                height: 40,
+              },
+            }}
+            title="현재 위치"
+          />
+        </BasicMap>
+      )}
     </div>
   );
 }

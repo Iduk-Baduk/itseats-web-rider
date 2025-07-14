@@ -3,7 +3,8 @@ import { useState, useEffect, useMemo } from "react";
 import apiClient from "../../services/apiClient";
 import { API_ENDPOINTS } from "../../config/api";
 import { calculateDistance } from "../../services/locationService";
-import DeliveryMap from "../../components/delivery/DeliveryMap";
+import BasicMap from "../../components/common/BasicMap";
+import { MapMarker, Polyline } from "react-kakao-maps-sdk";
 import styles from "./CallIncoming.module.css";
 
 export default function CallIncoming() {
@@ -29,12 +30,12 @@ export default function CallIncoming() {
 
     // 미터를 킬로미터로 변환하고 소수점 1자리까지 표시
     const distanceInKm = (distanceInMeters / 1000).toFixed(1);
-    
+
     console.log("📏 배달 거리 계산:", {
       myLocation: order.myLocation,
       storeLocation: order.storeLocation,
       distanceInMeters,
-      distanceInKm
+      distanceInKm,
     });
 
     return distanceInKm;
@@ -123,9 +124,9 @@ export default function CallIncoming() {
       // 매장으로 이동하는 페이지로 이동 (계산된 거리 정보 추가)
       const orderWithDistance = {
         ...order,
-        distance: deliveryDistance
+        distance: deliveryDistance,
       };
-      
+
       navigate("/delivery/go-to-store", {
         state: { order: orderWithDistance, location: riderLocation },
       });
@@ -159,9 +160,89 @@ export default function CallIncoming() {
     <div className={styles.wrapper}>
       {/* 지도 영역 */}
       <div className={styles.mapArea}>
-        {/* 실제 지도 또는 지도 이미지 */}
-        <img src="/images/map_sample.png" alt="지도" className={styles.mapImg} />
-        {/* 예시: 배달 경로, 배달지 마커 등은 추후 오버레이로 추가 */}
+        {riderLocation && order && (
+          <BasicMap
+            center={{
+              lat: riderLocation.latitude,
+              lng: riderLocation.longitude,
+            }}
+            level={5}
+            width="100%"
+            height="100%"
+            showControls={false}
+          >
+            {/* 현재 위치 마커 (라이더) */}
+            <MapMarker
+              position={{
+                lat: riderLocation.latitude,
+                lng: riderLocation.longitude,
+              }}
+              image={{
+                src: "http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png",
+                size: {
+                  width: 25,
+                  height: 25,
+                },
+              }}
+              title="현재 위치 (라이더)"
+            />
+
+            {/* 매장 위치 마커 */}
+            {order.storeLocation && (
+              <>
+                <MapMarker
+                  position={{
+                    lat: order.storeLocation.lat,
+                    lng: order.storeLocation.lng,
+                  }}
+                  image={{
+                    src: "/images/landing/storeMarker.png",
+                    size: {
+                      width: 24,
+                      height: 24,
+                    },
+                  }}
+                  title={`${order.storeName} (픽업지)`}
+                />
+
+                {/* 라이더 위치에서 매장까지의 경로선 */}
+                <Polyline
+                  path={[
+                    {
+                      lat: riderLocation.latitude,
+                      lng: riderLocation.longitude,
+                    },
+                    {
+                      lat: order.storeLocation.lat,
+                      lng: order.storeLocation.lng,
+                    },
+                  ]}
+                  strokeWeight={2}
+                  strokeColor="#FF6B35"
+                  strokeOpacity={0.8}
+                  strokeStyle="shortdash"
+                />
+              </>
+            )}
+          </BasicMap>
+        )}
+
+        {/* 위치 정보가 없을 때 fallback */}
+        {(!riderLocation || !order) && (
+          <div
+            style={{
+              width: "100%",
+              height: "100%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              background: "#f5f5f5",
+              color: "#666",
+            }}
+          >
+            지도를 불러오는 중...
+          </div>
+        )}
       </div>
       {/* 떠 있는 카드형 시트 */}
       <div className={styles.floatingSheet}>
@@ -172,7 +253,7 @@ export default function CallIncoming() {
         <div className={styles.price}>{order.deliveryFee?.toLocaleString()}원</div>
         <div className={styles.detailRow}>
           <span className={styles.distance}>
-            배달거리 {deliveryDistance ? `${deliveryDistance}km` : '계산 중...'}
+            배달거리 {deliveryDistance ? `${deliveryDistance}km` : "계산 중..."}
           </span>
           <span className={styles.infoIcon}>ⓘ</span>
         </div>
