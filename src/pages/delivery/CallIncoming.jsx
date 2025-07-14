@@ -30,12 +30,12 @@ export default function CallIncoming() {
 
     // 미터를 킬로미터로 변환하고 소수점 1자리까지 표시
     const distanceInKm = (distanceInMeters / 1000).toFixed(1);
-    
+
     console.log("📏 배달 거리 계산:", {
       myLocation: order.myLocation,
       storeLocation: order.storeLocation,
       distanceInMeters,
-      distanceInKm
+      distanceInKm,
     });
 
     return distanceInKm;
@@ -124,9 +124,9 @@ export default function CallIncoming() {
       // 매장으로 이동하는 페이지로 이동 (계산된 거리 정보 추가)
       const orderWithDistance = {
         ...order,
-        distance: deliveryDistance
+        distance: deliveryDistance,
       };
-      
+
       navigate("/delivery/go-to-store", {
         state: { order: orderWithDistance, location: riderLocation },
       });
@@ -186,7 +186,7 @@ export default function CallIncoming() {
               }}
               title="현재 위치 (라이더)"
             />
-            
+
             {/* 매장 위치 마커 */}
             {order.storeLocation && (
               <>
@@ -204,7 +204,7 @@ export default function CallIncoming() {
                   }}
                   title={`${order.storeName} (픽업지)`}
                 />
-                
+
                 {/* 라이더 위치에서 매장까지의 경로선 */}
                 <Polyline
                   path={[
@@ -224,7 +224,7 @@ export default function CallIncoming() {
                 />
               </>
             )}
-            
+
             {/* 배달지 마커 (배달지 정보가 있는 경우) */}
             {order.deliveryLocation && (
               <>
@@ -242,7 +242,7 @@ export default function CallIncoming() {
                   }}
                   title="배달지"
                 />
-                
+
                 {/* 매장에서 배달지까지의 경로선 */}
                 {order.storeLocation && (
                   <Polyline
@@ -259,25 +259,27 @@ export default function CallIncoming() {
                     strokeWeight={3}
                     strokeColor="#4A90E2"
                     strokeOpacity={0.6}
-                    strokeStyle="dashed"
+                    strokeStyle="dash"
                   />
                 )}
               </>
             )}
           </BasicMap>
         )}
-        
+
         {/* 위치 정보가 없을 때 fallback */}
         {(!riderLocation || !order) && (
-          <div style={{
-            width: "100%",
-            height: "100%",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            background: "#f5f5f5",
-            color: "#666"
-          }}>
+          <div
+            style={{
+              width: "100%",
+              height: "100%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              background: "#f5f5f5",
+              color: "#666",
+            }}
+          >
             지도를 불러오는 중...
           </div>
         )}
@@ -291,7 +293,7 @@ export default function CallIncoming() {
         <div className={styles.price}>{order.deliveryFee?.toLocaleString()}원</div>
         <div className={styles.detailRow}>
           <span className={styles.distance}>
-            배달거리 {deliveryDistance ? `${deliveryDistance}km` : '계산 중...'}
+            배달거리 {deliveryDistance ? `${deliveryDistance}km` : "계산 중..."}
           </span>
           <span className={styles.infoIcon}>ⓘ</span>
         </div>
