@@ -38,7 +38,6 @@ export default function DeliveryInProgress() {
       style={{
         position: "relative",
         width: "100%",
-        height: "100vh",
         height: "100dvh", // 동적 뷰포트 높이 (웹앱 최적화)
         overflow: "hidden",
       }}
