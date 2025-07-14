@@ -8,19 +8,25 @@ import styles from "./DeliveryComplete.module.css";
 export default function DeliveryComplete() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { order, location: riderLocation, uploadedImageUrl } = location.state || {};
+  const { order, location: riderLocation, uploadedImageUrl, completionData } = location.state || {};
   const [isLoading, setIsLoading] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
 
   console.log("배달 완료 - 전달받은 주문 데이터:", order);
   console.log("배달 완료 - 업로드된 사진 URL:", uploadedImageUrl);
+  console.log("배달 완료 - 완료 처리 데이터:", completionData);
+  console.log("배달 완료 - 총 금액:", order?.totalPrice);
+  console.log("배달 완료 - 배달비:", order?.deliveryFee);
 
-  // 컴포넌트 마운트 시 자동으로 배달 완료 API 호출
+  // 컴포넌트 마운트 시 자동으로 배달 완료 API 호출 (이미 PhotoConfirm에서 완료되었다면 생략)
   useEffect(() => {
-    if (order?.orderId && !isCompleted) {
+    if (order?.orderId && !isCompleted && !completionData) {
       handleDeliveryComplete();
+    } else if (completionData) {
+      // 이미 완료 처리된 경우
+      setIsCompleted(true);
     }
-  }, [order?.orderId, isCompleted]);
+  }, [order?.orderId, isCompleted, completionData]);
 
   // 배달 완료 API 호출
   const handleDeliveryComplete = async () => {
@@ -65,12 +71,18 @@ export default function DeliveryComplete() {
       </div>
       {/* 하단 배달완료 카드 */}
       <DeliveryCompleteSummary
-        service={order.storeName}
-        amount={`${(order.orderPrice + order.deliveryFee)?.toLocaleString()}원`}
-        baseFee={`${order.deliveryFee?.toLocaleString()}원`}
+        service={`${order.storeName} 배달`}
+        amount={order.totalPrice ? 
+          `${order.totalPrice.toLocaleString()}원` : 
+          (order.orderPrice && order.deliveryFee ? 
+            `${(order.orderPrice + order.deliveryFee).toLocaleString()}원` : 
+            '0원'
+          )
+        }
+        baseFee={`${order.deliveryFee?.toLocaleString() || '0'}원`}
         extraFee={order.extraFee ? `+${order.extraFee.toLocaleString()}원` : "+0원"}
         missionText="배달이 완료되었습니다!"
-        missionProgress={`주문#${order.orderId}`}
+        missionProgress={`주문#${order.orderNumber || order.orderId}`}
         onConfirm={handleConfirm}
         isLoading={isLoading}
       />
