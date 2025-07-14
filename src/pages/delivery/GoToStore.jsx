@@ -65,9 +65,9 @@ export default function GoToStore() {
 
       // Pickup 페이지로 이동 (병합된 상세 데이터 전달)
       navigate("/delivery/pickup", {
-        state: { 
+        state: {
           order: displayOrder, // 병합된 데이터 전달
-          location: riderLocation 
+          location: riderLocation,
         },
       });
     } catch (error) {
@@ -155,13 +155,6 @@ export default function GoToStore() {
             <div style={{ marginBottom: "6px", fontSize: "14px", color: "#333" }}>
               <strong>배달비:</strong>{" "}
               {displayOrder.deliveryFee ? displayOrder.deliveryFee.toLocaleString() : "정보 없음"}원
-            </div>
-            <div style={{ marginBottom: "6px", fontSize: "14px", color: "#333" }}>
-              <strong>주문 금액:</strong>{" "}
-              {displayOrder.orderPrice ? displayOrder.orderPrice.toLocaleString() : "정보 없음"}원
-            </div>
-            <div style={{ marginBottom: "6px", fontSize: "14px", color: "#333" }}>
-              <strong>배달 타입:</strong> {displayOrder.deliveryType || "정보 없음"}
             </div>
             <div style={{ fontSize: "14px", color: "#333" }}>
               <strong>매장까지 거리:</strong> {storeDistance ? `${storeDistance}km` : "정보 없음"}
