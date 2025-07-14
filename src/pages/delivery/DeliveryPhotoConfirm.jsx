@@ -53,31 +53,61 @@ export default function DeliveryPhotoConfirm() {
     }
 
     setIsLoading(true);
+    console.log("🖼️ 사진 업로드 시작:", {
+      orderId: order.orderId,
+      fileName: selectedImage.name,
+      fileSize: selectedImage.size,
+      fileType: selectedImage.type,
+      endpoint: API_ENDPOINTS.UPLOAD_PHOTO(order.orderId),
+    });
+
     try {
       // FormData로 사진 업로드
       const formData = new FormData();
       formData.append("image", selectedImage);
 
-      const response = await apiClient.post(API_ENDPOINTS.UPLOAD_PHOTO(order.orderId), formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+      const uploadResponse = await apiClient.post(
+        API_ENDPOINTS.UPLOAD_PHOTO(order.orderId), 
+        formData, 
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      console.log("🖼️ 사진 업로드 성공:", uploadResponse.data);
+
+      // 배달 완료 API 호출
+      console.log("✅ 배달 완료 API 호출 시작:", {
+        orderId: order.orderId,
+        endpoint: API_ENDPOINTS.COMPLETE_ORDER(order.orderId),
       });
 
-      console.log("사진 업로드 성공:", response.data);
-      alert("배달 인증 사진이 업로드되었습니다!");
+      const completeResponse = await apiClient.put(API_ENDPOINTS.COMPLETE_ORDER(order.orderId));
+      
+      console.log("✅ 배달 완료 성공:", completeResponse.data);
+      alert("배달이 성공적으로 완료되었습니다!");
 
       // 배달 완료 페이지로 이동
       navigate("/delivery/complete", {
         state: {
           order,
           location: riderLocation,
-          uploadedImageUrl: response.data.data?.imageUrl,
+          uploadedImageUrl: uploadResponse.data.data?.imageUrl,
+          completionData: completeResponse.data,
         },
       });
     } catch (error) {
-      console.error("사진 업로드 실패:", error);
-      alert("사진 업로드에 실패했습니다. 다시 시도해주세요.");
+      console.error("❌ 배달 완료 처리 실패:", error);
+      console.error("❌ 에러 상세:", {
+        status: error.response?.status,
+        message: error.response?.data?.message || error.message,
+        data: error.response?.data,
+      });
+
+      const errorMessage = error.response?.data?.message || "배달 완료 처리에 실패했습니다.";
+      alert(`실패: ${errorMessage}`);
     } finally {
       setIsLoading(false);
     }
@@ -144,7 +174,7 @@ export default function DeliveryPhotoConfirm() {
         인증 사진은 고객님과 운영센터로 전달됩니다.
         <br />
         <small style={{ color: "#666" }}>
-          주문#{order.orderId} - {order.storeName}
+          주문#{order.orderNumber || order.orderId} - {order.storeName}
         </small>
       </div>
 
