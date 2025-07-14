@@ -41,10 +41,26 @@ export default function useFetchOrders(location) {
       
       console.log("📦 최종 주문 데이터:", ordersData);
       setOrders(ordersData);
+      setApiError(null); // 성공 시 에러 초기화
       setLoading(false);
     } catch (error) {
-      setApiError(error.message);
-      console.error("주문을 가져오는 중 오류 발생:", error);
+      console.log("📦 주문 조회 에러:", {
+        status: error.response?.status,
+        message: error.response?.data?.message || error.message,
+        data: error.response?.data,
+      });
+
+      // 404 에러는 주문이 없는 정상적인 상황으로 처리
+      if (error.response?.status === 404) {
+        console.log("📦 주문 없음 (404) - 빈 배열로 처리");
+        setOrders([]);
+        setApiError(null);
+      } else {
+        // 다른 에러는 실제 에러로 처리
+        console.error("📦 실제 API 에러:", error);
+        setApiError(error.response?.data?.message || error.message);
+        setOrders([]);
+      }
       setLoading(false);
     }
   }, []);
