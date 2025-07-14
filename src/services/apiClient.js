@@ -5,9 +5,6 @@ import { API_CONFIG } from "../config/api";
 const apiClient = axios.create({
   baseURL: API_CONFIG.BASE_URL,
   timeout: 10000,
-  headers: {
-    "Content-Type": "application/json",
-  },
 });
 
 // 요청 인터셉터 (토큰 자동 추가)
@@ -16,18 +13,19 @@ apiClient.interceptors.request.use(
     console.log("API 요청:", config.method?.toUpperCase(), config.url);
 
     // 로그인 API는 토큰이 필요 없음 (url이 문자열인지 확인 후 체크)
-    const isLoginRequest = typeof config.url === "string" && config.url.includes("/login");
+    const publicEndpoints = ["/login", "/sign-up"];
+    const isPublicRequest = typeof config.url === "string" && publicEndpoints.some(endpoint => config.url.includes(endpoint));
 
-    if (!isLoginRequest) {
+    if (!isPublicRequest) {
       // localStorage에서 토큰 가져오기
       const token = localStorage.getItem("token");
       if (token) {
         // 표준 Authorization 헤더도 함께 전송
         config.headers.Authorization = `Bearer ${token}`;
       } else {
-        // 토큰이 없으면 에러
-        console.error("토큰이 없습니다. 인증이 필요합니다.");
-        throw new Error("인증이 필요합니다.");
+        // 토큰이 없으면 로그인 페이지로 리다이렉트
+        window.location.href = "/login";
+        return Promise.reject(new Error("인증이 필요합니다."));
       }
     }
 

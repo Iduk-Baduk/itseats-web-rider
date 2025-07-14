@@ -6,6 +6,8 @@ export const API_ENDPOINTS = {
   // 인증 관련
   LOGIN: () => "/login",
   LOGOUT: () => "/logout",
+  REGISTER: () => "/rider/members/sign-up",
+  CREATE_RIDER: () => "/rider/regist",
 
   // 배달 관련
   READY_ORDER: () => "/rider/request",
