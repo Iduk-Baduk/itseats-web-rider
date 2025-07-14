@@ -3,7 +3,8 @@ import { useState, useEffect, useMemo } from "react";
 import apiClient from "../../services/apiClient";
 import { API_ENDPOINTS } from "../../config/api";
 import { calculateDistance } from "../../services/locationService";
-import DeliveryMap from "../../components/delivery/DeliveryMap";
+import BasicMap from "../../components/common/BasicMap";
+import { MapMarker, Polyline } from "react-kakao-maps-sdk";
 import styles from "./CallIncoming.module.css";
 
 export default function CallIncoming() {
@@ -159,9 +160,127 @@ export default function CallIncoming() {
     <div className={styles.wrapper}>
       {/* 지도 영역 */}
       <div className={styles.mapArea}>
-        {/* 실제 지도 또는 지도 이미지 */}
-        <img src="/images/map_sample.png" alt="지도" className={styles.mapImg} />
-        {/* 예시: 배달 경로, 배달지 마커 등은 추후 오버레이로 추가 */}
+        {riderLocation && order && (
+          <BasicMap
+            center={{
+              lat: riderLocation.latitude,
+              lng: riderLocation.longitude,
+            }}
+            level={5}
+            width="100%"
+            height="100%"
+            showControls={false}
+          >
+            {/* 현재 위치 마커 (라이더) */}
+            <MapMarker
+              position={{
+                lat: riderLocation.latitude,
+                lng: riderLocation.longitude,
+              }}
+              image={{
+                src: "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png",
+                size: {
+                  width: 24,
+                  height: 35,
+                },
+              }}
+              title="현재 위치 (라이더)"
+            />
+            
+            {/* 매장 위치 마커 */}
+            {order.storeLocation && (
+              <>
+                <MapMarker
+                  position={{
+                    lat: order.storeLocation.lat,
+                    lng: order.storeLocation.lng,
+                  }}
+                  image={{
+                    src: "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png",
+                    size: {
+                      width: 24,
+                      height: 35,
+                    },
+                  }}
+                  title={`${order.storeName} (픽업지)`}
+                />
+                
+                {/* 라이더 위치에서 매장까지의 경로선 */}
+                <Polyline
+                  path={[
+                    {
+                      lat: riderLocation.latitude,
+                      lng: riderLocation.longitude,
+                    },
+                    {
+                      lat: order.storeLocation.lat,
+                      lng: order.storeLocation.lng,
+                    },
+                  ]}
+                  strokeWeight={5}
+                  strokeColor="#FF6B35"
+                  strokeOpacity={0.8}
+                  strokeStyle="solid"
+                />
+              </>
+            )}
+            
+            {/* 배달지 마커 (배달지 정보가 있는 경우) */}
+            {order.deliveryLocation && (
+              <>
+                <MapMarker
+                  position={{
+                    lat: order.deliveryLocation.lat,
+                    lng: order.deliveryLocation.lng,
+                  }}
+                  image={{
+                    src: "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_blue.png",
+                    size: {
+                      width: 24,
+                      height: 35,
+                    },
+                  }}
+                  title="배달지"
+                />
+                
+                {/* 매장에서 배달지까지의 경로선 */}
+                {order.storeLocation && (
+                  <Polyline
+                    path={[
+                      {
+                        lat: order.storeLocation.lat,
+                        lng: order.storeLocation.lng,
+                      },
+                      {
+                        lat: order.deliveryLocation.lat,
+                        lng: order.deliveryLocation.lng,
+                      },
+                    ]}
+                    strokeWeight={3}
+                    strokeColor="#4A90E2"
+                    strokeOpacity={0.6}
+                    strokeStyle="dashed"
+                  />
+                )}
+              </>
+            )}
+          </BasicMap>
+        )}
+        
+        {/* 위치 정보가 없을 때 fallback */}
+        {(!riderLocation || !order) && (
+          <div style={{
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            background: "#f5f5f5",
+            color: "#666"
+          }}>
+            지도를 불러오는 중...
+          </div>
+        )}
       </div>
       {/* 떠 있는 카드형 시트 */}
       <div className={styles.floatingSheet}>

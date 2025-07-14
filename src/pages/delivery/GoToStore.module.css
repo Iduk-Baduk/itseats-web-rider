@@ -8,23 +8,23 @@
 
 .mainCard {
   background: #fff;
-  border-radius: 18px 18px 0 0;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
-  width: 100vw;       /* 양옆 폭 꽉 채움 */
-  max-width: 100vw;   /* 최대 폭도 100vw */
-  height: 90vh;       /* 위로 더 길게 */
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  height: 90vh; /* 위로 더 길게 */
   padding: 32px 0 24px 0; /* 좌우 패딩 제거, 위 아래만 유지 */
   display: flex;
   flex-direction: column;
   align-items: stretch;
   position: relative;
-  margin: 0;          /* 마진 제거 */
-  overflow-y: auto;   /* 내용 많으면 스크롤 가능 */
+  margin: 0; /* 마진 제거 */
+  overflow-y: auto; /* 내용 많으면 스크롤 가능 */
 }
 
 /* 내부 섹션들 공통 */
 .section {
-  padding: 0 20px;
+  padding: 0; /* 패딩을 부모에서 관리하므로 제거 */
   margin-bottom: 18px;
 }
 
@@ -119,7 +119,6 @@
   align-items: center;
   justify-content: space-between;
   margin-bottom: 12px;
-  padding: 0 20px;
 }
 
 .cancelBtn {
@@ -151,7 +150,6 @@
 }
 
 .arriveBtn {
-  margin: 0 20px;
   background: #178351;
   color: #fff;
   border: none;
@@ -160,5 +158,5 @@
   font-weight: bold;
   padding: 16px 0;
   cursor: pointer;
-  width: calc(100% - 40px);
+  width: 100%; /* 너비를 100%로 설정 */
 }
