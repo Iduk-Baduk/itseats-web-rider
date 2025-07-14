@@ -40,9 +40,12 @@ export default function CallIncoming() {
     return distanceInKm;
   }, [order]);
 
-  console.log("전달받은 주문 데이터:", order);
-  console.log("전달받은 위치 데이터:", riderLocation);
-  console.log("계산된 배달거리:", deliveryDistance, "km");
+  // 디버깅 로그 (한 번만 실행)
+  useEffect(() => {
+    console.log("전달받은 주문 데이터:", order);
+    console.log("전달받은 위치 데이터:", riderLocation);
+    console.log("계산된 배달거리:", deliveryDistance, "km");
+  }, [order, riderLocation, deliveryDistance]); // 이 값들이 변경될 때만 실행
 
   // 타이머 기능
   useEffect(() => {
